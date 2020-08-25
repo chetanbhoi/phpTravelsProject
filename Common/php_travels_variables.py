@@ -1,0 +1,16 @@
+ddb_myAccount="xpath:(//a[@id='dropdownCurrency'])[2]"
+lnk_signUp="xpath://a[text()='Sign Up']"
+txt_fname="name:firstname"
+txt_lname="name:lastname"
+txt_mobile="name:phone"
+txt_email="name:email"
+txt_password="name:password"
+txt_cPassword="name:confirmpassword"
+btn_signUp="xpath://button[text()=' Sign Up']"
+lnk_login="xpath://a[text()='Login']"
+txt_username="name:username"
+btn_login="xpath://button[text()='Login']"
+img_homeLog="xpath://div[@class='header-logo go-right']//a//img"
+lnk_logout="xpath://a[text()='Logout']"
+
+
