@@ -12,5 +12,8 @@ txt_username="name:username"
 btn_login="xpath://button[text()='Login']"
 img_homeLog="xpath://div[@class='header-logo go-right']//a//img"
 lnk_logout="xpath://a[text()='Logout']"
+btn_adult_plus="xpath:(//input[@name='%name%'])[1]//..//span/button[text()='+']"
+btn_adult_minus="xpath:(//input[@name='%name%'])[1]//..//span/button[text()='-']"
+txt_adults="xpath:(//input[@name='%name%'])[1]"
 
 
