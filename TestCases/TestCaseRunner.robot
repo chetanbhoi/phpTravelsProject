@@ -1,6 +1,6 @@
 *** Settings ***
 #Author    chetan.bhoi
-Resource  ../Common/php_travels_keywords.robot
+Resource  ../Common/php_travels_resources.robot
 Force Tags    TC-2855001
 Suite Setup  Open Browser and Login
 Suite Teardown  Logout and Close Browser
