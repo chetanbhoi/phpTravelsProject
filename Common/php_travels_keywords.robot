@@ -3,7 +3,7 @@
 Library  SeleniumLibrary
 Library    Collections
 Library    String
-Variables  ../Common/php_travels_variables.py
+Variables  ./php_travels_variables.py
 
 *** Variables ***
 ${BASEURL}    https://www.phptravels.net/
@@ -16,7 +16,7 @@ ${USERLNAME}    Bhoi
 *** Keywords ***
 Open Browser and Login
     Open Browser and Maximize
-    #SignUp Into phpTravels    chetan@gmail.com    123456    Chetan    Bhoi
+#    SignUp Into phpTravels    chetan@gmail.com    123456    Chetan    Bhoi
     Login Into phpTravels  ${USERNAME}  ${PASSWORD}
 
 Logout and Close Browser
@@ -27,59 +27,66 @@ Open Browser and Maximize
     Open Browser  ${BASEURL}  ${BROWSER}
     Maximize Browser window
     Set Selenium Implicit Wait  5 sec
+#    set selenium speed    1 sec
 
 SignUp Into phpTravels
     [Arguments]  ${email}  ${password}  ${firstName}  ${lastName}
-    Click Element  ${ddb_myAccount}
-    Click Element  ${lnk_signUp}
-    Input Text  ${txt_fname}  ${firstName}
-    Input Text  ${txt_lname}  ${lastName}
-    Input Text  ${txt_mobile}  9876543210
-    Input Text  ${txt_email}  ${email}
-    Input Text  ${txt_password}  ${password}
-    Input Text  ${txt_cPassword}  ${password}
+    Click Element  ${MyAccountDropDown}
+    Click Element  ${SignUpLink}
+    Input Text  ${FirstNameInput}  ${firstName}
+    Input Text  ${LastNameInput}  ${lastName}
+    Input Text  ${MobileInput}  9876543210
+    Input Text  ${EmailInput}  ${email}
+    Input Text  ${PasswordInput}  ${password}
+    Input Text  ${ConfirmPasswordInput}  ${password}
     execute javascript  window.scrollTo(0,1000)
-    Click Button  ${btn_signUp}
+    Click Button  ${SignUpButton}
     wait until element is visible    xpath://*[contains(text(),'Hi, ${firstName} ${lastName}')]
 
 Login Into phpTravels
     [Arguments]     ${username}     ${password}
-    Click Element  ${ddb_myAccount}
-    Click Element  ${lnk_login}
-    Input Text  ${txt_username}  ${username}
-    Input Text  ${txt_password}  ${password}
-    Click Button  ${btn_login}
+    Click Element  ${MyAccountDropDown}
+    Click Element  ${LoginLink}
+    Input Text  ${UsernameInput}  ${username}
+    Input Text  ${PasswordInput}  ${password}
+    Click Button  ${LoginButton}
     wait until element is visible    xpath://*[contains(text(),'Hi, ${USERFNAME} ${USERLNAME}')]
-    ${accName} =    get text    ${ddb_myAccount}
+    ${accName} =    get text    ${MyAccountDropDown}
     [Return]    ${accName}
 
 Logout From phpTravels
-    Click Element  ${img_homeLog}
-    Click Element  ${ddb_myAccount}
-    Click Element  ${lnk_logout}
-    wait until element is visible    xpath://h3[text()='Login']
+    Click Element  ${HomeLogoImage}
+    Click Element  ${MyAccountDropDown}
+    Click Element  ${LogoutLink}
+    wait until element is visible    ${LoginLabel}
 
 Search Hotel By Name
     [Arguments]    ${searchValue}    ${checkIn}=${EMPTY}     ${checkOut}=${EMPTY}     ${adults}=${EMPTY}     ${children}=${EMPTY}
-    Click Element    ${img_homeLog}
+    Click Element    ${HomeLogoImage}
     execute javascript    window.scrollTo(0,5000)
-    scroll element into view    xpath://nav[@class='menu-horizontal-02']//a[contains(text(),'Hotel')]
-    wait until element is visible    xpath://nav[@class='menu-horizontal-02']//a[contains(text(),'Hotel')]
-    click element    xpath://nav[@class='menu-horizontal-02']//a[contains(text(),'Hotel')]
-    click element    xpath://div[@id='s2id_autogen16']//a[@class='select2-choice']
-    input text       xpath://div[@id='select2-drop']//div//input    ${searchValue}
-    wait until element is visible    xpath://div[@id='select2-drop']//ul[@class='select2-results']//li
-    ${length} =    get element count    xpath://div[@id='select2-drop']//ul[@class='select2-results']//li
+    scroll element into view    ${HotelNavTab}
+    wait until element is visible    ${HotelNavTab}
+    click element    ${HotelNavTab}
+    wait until element is visible    ${SearchLabelInput}
+    click element    ${SearchLabelInput}
+    input text       ${SearchInput}    ${searchValue}
+    ${length} =    get element count    ${SearchListView}
+    FOR    ${i}    IN RANGE    10
+           Exit For Loop If    ${length} >= 1
+           Sleep    1
+           ${length} =    get element count    ${SearchListView}
+    END
+    ${SearchListedValue} =    Replace Dynamic Elements    ${SearchListedValue}    ${searchValue}
+    log to console    ${SearchListedValue}
     Run Keyword If    '${length}' > '1'
-    ...    click element    xpath://ul[@class='select2-result-sub']//span[contains(text(),'${searchValue}')]
-    ...    ELSE    Press Keys    xpath://div[@id='select2-drop']//div//input    TAB
+    ...    click element     ${SearchListedValue}
+    ...    ELSE    Press Keys    ${SearchInput}    TAB
 
     Run Keyword If    '${checkIn}' != '${EMPTY}'    Send CheckIn Date    ${checkIn}
     Run Keyword If    '${checkOut}' != '${EMPTY}'    Send checkout date    ${checkOut}
     run keyword if    '${adults}' != '${EMPTY}'     Select Persons    ${adults}    adults
     run keyword if    '${children}' != '${EMPTY}'    Select Persons    ${children}    children
-    sleep    3 sec
-    Run Keyword If    '${length}' > '1'    click button    xpath://div[@id='hotels']//button[contains(text(),'Search')]
+    Run Keyword If    '${length}' > '1'  click element    ${SearchButton}
 
     ${response} =    Set Variable If    '${length}' > '1'    found
     ...    '${length}' == '1'     not found
@@ -108,45 +115,52 @@ Select Date From DatePicker
     run keyword if    '${type}' == 'checkin'    execute javascript   window.scrollTo(0,5000)
     run keyword if    '${type}' == 'checkout'    execute javascript   window.scrollTo(0,7000)
 
-    click element    xpath://div[@id='datepickers-container']//div[${iV}]//nav[1]//div[@class='datepicker--nav-title']
-    click element    xpath://div[@id='datepickers-container']//div[${iV}]//nav[1]//div[@class='datepicker--nav-title']
-    ${flag} =    get element count    xpath://div[@id='datepickers-container']//div[${iV}]//div[contains(@class,'datepicker--cell datepicker--cell-year')][@data-year='${year}']
+    ${DatePickerTitle} =    Replace Dynamic Elements    ${DatePickerTitle}    ${iV}
+    click element    ${DatePickerTitle}
+    click element    ${DatePickerTitle}
+    ${DatePickerYear} =    Replace Dynamic Elements    ${DatePickerYear}    ${iV}
+    ${DatePickerYear} =    replace string    ${DatePickerYear}    ${year}    ${year}
+    ${flag} =    get element count    ${DatePickerYear}
     FOR    ${i}    IN RANGE    10
            Exit For Loop If    ${flag} == 1
-           click element    xpath://div[@id='datepickers-container']//div[${iV}]//div[contains(@class,'datepicker--nav-action')][@data-action='next']
-           ${flag} =    get element count    xpath://div[@id='datepickers-container']//div[${iV}]//div[contains(@class,'datepicker--cell datepicker--cell-year')][@data-year='${year}']
+           ${DatePickerNextButton} =    Replace Dynamic Elements    ${DatePickerNextButton}    ${iV}
+           click element    ${DatePickerNextButton}
+           ${flag} =    get element count    ${DatePickerYear}
     END
-    click element     xpath://div[@id='datepickers-container']//div[${iV}]//div[contains(@class,'datepicker--cell datepicker--cell-year')][@data-year='${year}']
+    click element     ${DatePickerYear}
     sleep    3 sec
-    wait until element is visible    xpath://div[@id='datepickers-container']//div[${iV}]//div[@class='datepicker--cell datepicker--cell-month'][@data-month='${month}']
-    click element at coordinates    xpath://div[@id='datepickers-container']//div[${iV}]//div[@class='datepicker--cell datepicker--cell-month'][@data-month='${month}']    0    0
+    ${DatePickerMonth} =   Replace Dynamic Elements    ${DatePickerMonth}    ${iV}
+    ${DatePickerMonth} =   replace string    ${DatePickerMonth}    ${month}    ${month}
+    wait until element is visible    ${DatePickerMonth}
+    click element at coordinates    ${DatePickerMonth}    0    0
     sleep    3 sec
-    wait until element is enabled     xpath://div[@id='datepickers-container']//div[${iV}]//div[contains(@class,'datepicker--cell datepicker--cell-day')][@data-date='${day}'][@data-month='${month}']
-    click element     xpath://div[@id='datepickers-container']//div[${iV}]//div[contains(@class,'datepicker--cell datepicker--cell-day')][@data-date='${day}'][@data-month='${month}']
+    ${DatePickerDays} =    Replace Dynamic Elements    ${DatePickerDays}    ${iV}
+    ${DatePickerDays} =    replace string    ${DatePickerDays}    ${day}    ${day}
+    ${DatePickerDays} =    replace string    ${DatePickerDays}    ${month}    ${month}
+    wait until element is enabled     ${DatePickerDays}
+    click element     ${DatePickerDays}
     log to console    Selected date is: ${dateValue}
-
-
 
 Send CheckOut Date
     [Arguments]    ${date}
-    click element    xpath://input[@id='checkout']
-    clear element text    xpath://input[@id='checkout']
-    input text    xpath://input[@id='checkout']    ${date}
-    press keys    xpath://input[@id='checkout']    TAB
+    click element    ${CheckOutDateInput}
+    clear element text    ${CheckOutDateInput}
+    input text    ${CheckOutDateInput}    ${date}
+    press keys    ${CheckOutDateInput}    TAB
 
 Send CheckIn Date
     [Arguments]    ${date}
-    click element    xpath://input[@id='checkin']
-    clear element text    xpath://input[@id='checkin']
-    input text    xpath://input[@id='checkin']    ${date}
-    press keys    xpath://input[@id='checkin']    TAB
+    click element    ${CheckInDateInput}
+    clear element text    ${CheckInDateInput}
+    input text    ${CheckInDateInput}   ${date}
+    press keys   ${CheckInDateInput}    TAB
 
 Select Persons
     [Arguments]    ${numberOfAdults}    ${type}
     ${name} =    convert to lower case    ${type}
-    ${txt_adults} =    replace string    ${txt_adults}    %name%    ${name}
-    ${btn_adult_plus} =    replace string    ${btn_adult_plus}    %name%    ${name}
-    ${btn_adult_minus} =    replace string    ${btn_adult_minus}    %name%    ${name}
+    ${txt_adults} =   Replace Dynamic Elements    ${AdultsInput}   ${name}
+    ${btn_adult_plus} =    Replace Dynamic Elements    ${AdultPlusButton}   ${name}
+    ${btn_adult_minus} =    Replace Dynamic Elements   ${AdultMinusButton}    ${name}
 
     ${adultValue} =   get element attribute    ${txt_adults}    value
     ${numb1} =    convert to integer    ${numberOfAdults}
@@ -165,3 +179,9 @@ Select Persons
            ...    ELSE IF    ${flag} == 2    click element    ${btn_adult_minus}
     END
     log to console    successfully selected adults
+
+Replace Dynamic Elements
+    [Arguments]    ${element}    ${value}
+    ${result} =  replace string    ${element}    %s%    ${value}
+    log to console    ${result}
+    [Return]    ${result}
