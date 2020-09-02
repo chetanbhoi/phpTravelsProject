@@ -8,27 +8,27 @@ Test Teardown  Take ScreenShot On Fail TestCase
 
 *** Test Cases ***
 Search Hotel with valid hotel name
-    ${hotelName} =    Get data from jsonfile    valid_hotel_name.hotel_name
+   ${hotelName} =    set variable    ${valid_hotel_name["options"]["hotel_name"]}
     ${response} =   Search Hotel By Name    ${hotelName}
     should be equal    ${response}    found
 
 Search Hotel with invalid hotel name
-    ${hotelName} =    Get data from jsonfile    invalid_hotel_name.hotel_name
+   ${hotelName} =    set variable    ${invalid_hotel_name["options"]["hotel_name"]}
     ${response} =    Search Hotel By Name    ${hotelName}
     should be equal    ${response}    not found
 
 Search Hotel with date picker
-    ${hotelName} =    Get data from jsonfile    valid_hotel_name_and_date.hotel_name
-    ${checkIndate} =    Get data from jsonfile    valid_hotel_name_and_date.start_date
-    ${checkOutdate} =    Get data from jsonfile    valid_hotel_name_and_date.end_date
+     ${hotelName} =    set variable    ${valid_hotel_name_and_date["options"]["hotel_name"]}
+    ${checkIndate} =    set variable    ${valid_hotel_name_and_date["options"]["start_date"]}
+    ${checkOutdate} =    set variable    ${valid_hotel_name_and_date["options"]["end_date"]}
     ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}
     should be equal    ${response}    found
 
 Search Hotel with date picker and persons
-    ${hotelName} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.hotel_name
-    ${checkIndate} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.start_date
-    ${checkOutdate} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.end_date
-    ${adults} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.adults
-    ${child} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.child
+    ${hotelName} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["hotel_name"]}
+    ${checkIndate} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["start_date"]}
+    ${checkOutdate} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["end_date"]}
+    ${adults} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["adults"]}
+    ${child} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["child"]}
     ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}    ${adults}    ${child}
     should be equal    ${response}    found
