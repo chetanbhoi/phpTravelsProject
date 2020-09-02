@@ -70,14 +70,14 @@ Search Hotel By Name
     wait until element is visible    ${SearchLabelInput}
     click element    ${SearchLabelInput}
     input text       ${SearchInput}    ${searchValue}
+    wait until element is visible    xpath://div[@id ='select2-drop']//ul[@class ='select2-results']//li
     ${length} =    get element count    ${SearchListView}
-    FOR    ${i}    IN RANGE    10
-           Exit For Loop If    ${length} >= 1
+    FOR    ${i}    IN RANGE    5
+           Exit For Loop If    ${length} > 1
            Sleep    1
            ${length} =    get element count    ${SearchListView}
     END
     ${SearchListedValue} =    Replace Dynamic Elements    ${SearchListedValue}    ${searchValue}
-    log to console    ${SearchListedValue}
     Run Keyword If    '${length}' > '1'
     ...    click element     ${SearchListedValue}
     ...    ELSE    Press Keys    ${SearchInput}    TAB
@@ -128,18 +128,15 @@ Select Date From DatePicker
            ${flag} =    get element count    ${DatePickerYear}
     END
     click element     ${DatePickerYear}
-    sleep    3 sec
     ${DatePickerMonth} =   Replace Dynamic Elements    ${DatePickerMonth}    ${iV}
     ${DatePickerMonth} =   replace string    ${DatePickerMonth}    ${month}    ${month}
     wait until element is visible    ${DatePickerMonth}
     click element at coordinates    ${DatePickerMonth}    0    0
-    sleep    3 sec
     ${DatePickerDays} =    Replace Dynamic Elements    ${DatePickerDays}    ${iV}
     ${DatePickerDays} =    replace string    ${DatePickerDays}    ${day}    ${day}
     ${DatePickerDays} =    replace string    ${DatePickerDays}    ${month}    ${month}
     wait until element is enabled     ${DatePickerDays}
     click element     ${DatePickerDays}
-    log to console    Selected date is: ${dateValue}
 
 Send CheckOut Date
     [Arguments]    ${date}
@@ -156,32 +153,40 @@ Send CheckIn Date
     press keys   ${CheckInDateInput}    TAB
 
 Select Persons
-    [Arguments]    ${numberOfAdults}    ${type}
+    [Arguments]    ${numberOfPerson}    ${type}
     ${name} =    convert to lower case    ${type}
-    ${txt_adults} =   Replace Dynamic Elements    ${AdultsInput}   ${name}
-    ${btn_adult_plus} =    Replace Dynamic Elements    ${AdultPlusButton}   ${name}
-    ${btn_adult_minus} =    Replace Dynamic Elements   ${AdultMinusButton}    ${name}
+    ${PersonInput} =   Replace Dynamic Elements    ${PersonInput}   ${name}
+    ${PersonPlusButton} =    Replace Dynamic Elements    ${PersonPlusButton}   ${name}
+    ${PersonMinusButton} =    Replace Dynamic Elements   ${PersonMinusButton}    ${name}
 
-    ${adultValue} =   get element attribute    ${txt_adults}    value
-    ${numb1} =    convert to integer    ${numberOfAdults}
-    ${numb2} =    convert to integer    ${adultValue}
+    ${currentPersonValue} =   get element attribute    ${PersonInput}    value
+    ${numberOfPerson} =    convert to integer    ${numberOfPerson}
+    ${currentPersonValue} =    convert to integer    ${currentPersonValue}
 
-    ${flag} =    set variable if    ${numb2} == ${numb1}    0
-    ...    ${numb2} < ${numb1}    1
-    ...    ${numb2} > ${numb1}    2
+    ${flag} =    set variable if    ${currentPersonValue} == ${numberOfPerson}    0
+    ...    ${currentPersonValue} < ${numberOfPerson}    1
+    ...    ${currentPersonValue} > ${numberOfPerson}    2
 
-    ${tclick} =   run keyword if    ${flag}==1   Evaluate     ${numb1}-${numb2}
-    ...    ELSE IF   ${flag}==2   Evaluate     ${numb2}-${numb1}
+    ${tclick} =   run keyword if    ${flag}==1   Evaluate     ${numberOfPerson}-${currentPersonValue}
+    ...    ELSE IF   ${flag}==2   Evaluate     ${currentPersonValue}-${numberOfPerson}
 
-     FOR    ${i}    IN RANGE    ${tclick}
-           Exit For Loop If   ${numb2} == ${numb1}
-           run keyword if    ${flag} == 1    click element    ${btn_adult_plus}
-           ...    ELSE IF    ${flag} == 2    click element    ${btn_adult_minus}
+    run keyword if    ${flag} == 1    Add Person Value      ${PersonPlusButton}    ${tclick}
+    ...    ELSE IF    ${flag} == 2    Minus Person Value    ${PersonMinusButton}    ${tclick}
+
+
+Add Person Value
+    [Arguments]    ${PersonPlusButton}    ${numberOfClick}
+    FOR    ${i}   IN RANGE    ${numberOfClick}
+           click element    ${PersonPlusButton}
     END
-    log to console    successfully selected adults
+
+Minus Person Value
+    [Arguments]   ${PersonMinusButton}    ${numberOfClick}
+    FOR    ${i}   IN RANGE    ${numberOfClick}
+           click element    ${PersonMinusButton}
+    END
 
 Replace Dynamic Elements
     [Arguments]    ${element}    ${value}
     ${result} =  replace string    ${element}    %s%    ${value}
-    log to console    ${result}
     [Return]    ${result}
