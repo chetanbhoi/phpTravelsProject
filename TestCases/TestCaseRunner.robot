@@ -8,17 +8,27 @@ Test Teardown  Take ScreenShot On Fail TestCase
 
 *** Test Cases ***
 Search Hotel with valid hotel name
-    ${response} =   Search Hotel By Name    Rose Rayhaan Rotana
+    ${hotelName} =    Get data from jsonfile    valid_hotel_name.hotel_name
+    ${response} =   Search Hotel By Name    ${hotelName}
     should be equal    ${response}    found
 
 Search Hotel with invalid hotel name
-    ${response} =    Search Hotel By Name    dffgdgfdd
+    ${hotelName} =    Get data from jsonfile    invalid_hotel_name.hotel_name
+    ${response} =    Search Hotel By Name    ${hotelName}
     should be equal    ${response}    not found
 
 Search Hotel with date picker
-    ${response} =    Search Hotel By Name    Rose Rayhaan Rotana    19/2/2022    10/10/2022
+    ${hotelName} =    Get data from jsonfile    valid_hotel_name_and_date.hotel_name
+    ${checkIndate} =    Get data from jsonfile    valid_hotel_name_and_date.start_date
+    ${checkOutdate} =    Get data from jsonfile    valid_hotel_name_and_date.end_date
+    ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}
     should be equal    ${response}    found
 
 Search Hotel with date picker and persons
-    ${response} =    Search Hotel By Name    Rose Rayhaan Rotana    19/2/2022    10/10/2022    3    2
+    ${hotelName} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.hotel_name
+    ${checkIndate} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.start_date
+    ${checkOutdate} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.end_date
+    ${adults} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.adults
+    ${child} =    Get data from jsonfile    valid_hotel_name_and_date_and_persons.child
+    ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}    ${adults}    ${child}
     should be equal    ${response}    found
