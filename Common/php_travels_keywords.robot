@@ -16,8 +16,8 @@ ${USERLNAME}    Bhoi
 *** Keywords ***
 Open Browser and Login
     Open Browser and Maximize
-#    SignUp Into phpTravels    chetan@gmail.com    123456    Chetan    Bhoi
-    Login Into phpTravels  ${USERNAME}  ${PASSWORD}
+    SignUp Into phpTravels    chetan@gmail.com    123456    Chetan    Bhoi
+#    Login Into phpTravels  ${USERNAME}  ${PASSWORD}
 
 Logout and Close Browser
     Logout From phpTravels
@@ -32,6 +32,7 @@ Open Browser and Maximize
 SignUp Into phpTravels
     [Arguments]  ${email}  ${password}  ${firstName}  ${lastName}
     Click Element  ${MyAccountDropDown}
+    wait until element is visible    ${SignUpLink}
     Click Element  ${SignUpLink}
     Input Text  ${FirstNameInput}  ${firstName}
     Input Text  ${LastNameInput}  ${lastName}
