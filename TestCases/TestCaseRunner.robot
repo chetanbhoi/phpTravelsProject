@@ -1,34 +1,52 @@
 *** Settings ***
 #Author    chetan.bhoi
-Resource  ../Common/php_travels_resources.robot
+Resource  ../Common/php_travels_resources.txt
 Force Tags    TC-2855001
-Suite Setup  Open Browser and Login
+Suite Setup  Open Browser and Login    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}   ${USERNAME}  ${PASSWORD}
 Suite Teardown  Logout and Close Browser
 Test Teardown  Take ScreenShot On Fail TestCase
 
 *** Test Cases ***
 Search Hotel with valid hotel name
-   ${hotelName} =    set variable    ${valid_hotel_name["options"]["hotel_name"]}
+    ${hotelName} =    Set Variable    ${valid_hotel_name["options"]["hotel_name"]}
     ${response} =   Search Hotel By Name    ${hotelName}
-    should be equal    ${response}    found
+    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
+    Should Be Equal    ${resHotelName}    ${hotelName}    Hotel name is not found as expected
 
 Search Hotel with invalid hotel name
-   ${hotelName} =    set variable    ${invalid_hotel_name["options"]["hotel_name"]}
+    ${hotelName} =    Set Variable    ${invalid_hotel_name["options"]["hotel_name"]}
     ${response} =    Search Hotel By Name    ${hotelName}
-    should be equal    ${response}    not found
+    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
+    Should Be Equal    ${resHotelName}    No matches found    Hotel name is not found as expected
+
 
 Search Hotel with date picker
-     ${hotelName} =    set variable    ${valid_hotel_name_and_date["options"]["hotel_name"]}
-    ${checkIndate} =    set variable    ${valid_hotel_name_and_date["options"]["start_date"]}
-    ${checkOutdate} =    set variable    ${valid_hotel_name_and_date["options"]["end_date"]}
+    ${hotelName} =    Set Variable    ${valid_hotel_name_and_date["options"]["hotel_name"]}
+    ${checkIndate} =    Set Variable    ${valid_hotel_name_and_date["options"]["start_date"]}
+    ${checkOutdate} =    Set Variable    ${valid_hotel_name_and_date["options"]["end_date"]}
     ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}
-    should be equal    ${response}    found
+    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
+    ${resCheckInDate} =   Pop From Dictionary    ${response}    CheckInDate
+    ${resCheckOutDate} =   Pop From Dictionary    ${response}    CheckOutDate
+    Should Be Equal    ${resHotelName}    ${hotelName}    Hotel name is not found as expected
+    Should Be Equal    ${resCheckInDate}    ${checkIndate}    CheckOutDate is not found as expected
+    Should Be Equal    ${resCheckOutDate}    ${checkOutdate}    CheckInDate is not found as expected
+
 
 Search Hotel with date picker and persons
-    ${hotelName} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["hotel_name"]}
-    ${checkIndate} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["start_date"]}
-    ${checkOutdate} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["end_date"]}
-    ${adults} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["adults"]}
-    ${child} =    set variable    ${valid_hotel_name_and_date_and_persons["options"]["child"]}
+    ${hotelName} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["hotel_name"]}
+    ${checkIndate} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["start_date"]}
+    ${checkOutdate} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["end_date"]}
+    ${adults} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["adults"]}
+    ${child} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["child"]}
     ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}    ${adults}    ${child}
-    should be equal    ${response}    found
+    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
+    ${resCheckInDate} =   Pop From Dictionary    ${response}    CheckInDate
+    ${resCheckOutDate} =   Pop From Dictionary    ${response}    CheckOutDate
+    ${resAdults} =   Pop From Dictionary    ${response}    Adults
+    ${resChilds} =   Pop From Dictionary    ${response}    Childs
+    Should Be Equal    ${resHotelName}    ${hotelName}    Hotel name is not found as expected
+    Should Be Equal    ${resCheckInDate}    ${checkIndate}    CheckOutDate is not found as expected
+    Should Be Equal    ${resCheckOutDate}    ${checkOutdate}    CheckInDate is not found as expected
+    Should Be Equal    ${resAdults}    ${adults}    Adults value is not found as expected
+    Should Be Equal    ${resChilds}    ${resChilds}    Childs value is not found as expected

@@ -1,0 +1,2 @@
+*** Settings ***
+Resource     php_travels_keywords.robot
