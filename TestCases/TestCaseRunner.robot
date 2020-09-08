@@ -8,29 +8,46 @@ Test Teardown  Take ScreenShot On Fail TestCase
 
 *** Test Cases ***
 Search Hotel with valid hotel name
+    ${defaultCheckInDate} =    Get Date With Days    3
+    ${defaultCheckOutDate} =   Get Date With Days    4
     ${hotelName} =    Set Variable    ${valid_hotel_name["options"]["hotel_name"]}
-    ${response} =   Search Hotel By Name    ${hotelName}
-    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
-    Should Be Equal    ${resHotelName}    ${hotelName}    Hotel name is not found as expected
+    ${expectedDictionary} =    Create Dictionary
+    ...    HotelName    ${hotelName}
+    ...    CheckInDate    ${defaultCheckInDate}
+    ...    CheckOutDate    ${defaultCheckOutDate}
+    ...    Adults    2
+    ...    Childs    0
+
+    ${actuallDictionary} =   Search Hotel By Name    ${hotelName}
+    Dictionaries Should Be Equal    ${expectedDictionary}    ${actuallDictionary}    Mismatch dictionary values
 
 Search Hotel with invalid hotel name
+    ${defaultCheckInDate} =    Get Date With Days    3
+    ${defaultCheckOutDate} =    Get Date With Days    4
     ${hotelName} =    Set Variable    ${invalid_hotel_name["options"]["hotel_name"]}
-    ${response} =    Search Hotel By Name    ${hotelName}
-    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
-    Should Be Equal    ${resHotelName}    No matches found    Hotel name is not found as expected
+    ${expectedDictionary} =    Create Dictionary
+    ...    HotelName    No matches found
+    ...    CheckInDate    ${defaultCheckInDate}
+    ...    CheckOutDate    ${defaultCheckOutDate}
+    ...    Adults    2
+    ...    Childs    0
 
+    ${actuallDictionary} =   Search Hotel By Name    ${hotelName}
+    Dictionaries Should Be Equal    ${expectedDictionary}    ${actuallDictionary}    Mismatch dictionary values
 
 Search Hotel with date picker
     ${hotelName} =    Set Variable    ${valid_hotel_name_and_date["options"]["hotel_name"]}
     ${checkIndate} =    Set Variable    ${valid_hotel_name_and_date["options"]["start_date"]}
     ${checkOutdate} =    Set Variable    ${valid_hotel_name_and_date["options"]["end_date"]}
-    ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}
-    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
-    ${resCheckInDate} =   Pop From Dictionary    ${response}    CheckInDate
-    ${resCheckOutDate} =   Pop From Dictionary    ${response}    CheckOutDate
-    Should Be Equal    ${resHotelName}    ${hotelName}    Hotel name is not found as expected
-    Should Be Equal    ${resCheckInDate}    ${checkIndate}    CheckOutDate is not found as expected
-    Should Be Equal    ${resCheckOutDate}    ${checkOutdate}    CheckInDate is not found as expected
+    ${expectedDictionary} =    Create Dictionary
+    ...    HotelName    ${hotelName}
+    ...    CheckInDate    ${checkIndate}
+    ...    CheckOutDate    ${checkOutdate}
+    ...    Adults    2
+    ...    Childs    0
+
+    ${actuallDictionary} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}
+    Dictionaries Should Be Equal    ${expectedDictionary}    ${actuallDictionary}    Mismatch dictionary values
 
 
 Search Hotel with date picker and persons
@@ -39,14 +56,12 @@ Search Hotel with date picker and persons
     ${checkOutdate} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["end_date"]}
     ${adults} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["adults"]}
     ${child} =    Set Variable    ${valid_hotel_name_and_date_and_persons["options"]["child"]}
-    ${response} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}    ${adults}    ${child}
-    ${resHotelName} =   Pop From Dictionary    ${response}    HotelName
-    ${resCheckInDate} =   Pop From Dictionary    ${response}    CheckInDate
-    ${resCheckOutDate} =   Pop From Dictionary    ${response}    CheckOutDate
-    ${resAdults} =   Pop From Dictionary    ${response}    Adults
-    ${resChilds} =   Pop From Dictionary    ${response}    Childs
-    Should Be Equal    ${resHotelName}    ${hotelName}    Hotel name is not found as expected
-    Should Be Equal    ${resCheckInDate}    ${checkIndate}    CheckOutDate is not found as expected
-    Should Be Equal    ${resCheckOutDate}    ${checkOutdate}    CheckInDate is not found as expected
-    Should Be Equal    ${resAdults}    ${adults}    Adults value is not found as expected
-    Should Be Equal    ${resChilds}    ${resChilds}    Childs value is not found as expected
+    ${expectedDictionary} =    Create Dictionary
+    ...    HotelName    ${hotelName}
+    ...    CheckInDate    ${checkIndate}
+    ...    CheckOutDate    ${checkOutdate}
+    ...    Adults    ${adults}
+    ...    Childs    ${child}
+
+    ${actuallDictionary} =    Search Hotel By Name    ${hotelName}    ${checkIndate}   ${checkOutdate}    ${adults}    ${child}
+    Dictionaries Should Be Equal    ${expectedDictionary}    ${actuallDictionary}    Mismatch dictionary values
