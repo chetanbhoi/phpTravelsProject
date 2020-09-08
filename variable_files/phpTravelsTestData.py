@@ -1,3 +1,4 @@
+#Hotel Test Data......................................
 valid_hotel_name = {
     'options':
         {
@@ -26,5 +27,17 @@ valid_hotel_name_and_date_and_persons = {
             'end_date': '10/10/2022',
             "adults": '2',
             "child": '5'
+        }
+}
+#Flights Test Data......................................
+valid_flight_name = {
+    'flight':
+        {
+            'from': 'test',
+            'to': 'test',
+            'depart': 'sdfaf',
+            'adult': 'sdfaf',
+            'child': 'sdfaf',
+            'infant': 'sdfaf',
         }
 }
