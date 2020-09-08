@@ -34,5 +34,7 @@ ${CheckInDateValue} =   css:input[name='checkin']:first-of-type
 ${CheckOutDateValue} =   css:input[name='checkout']:first-of-type
 ${AdultsValue} =    css:div[class='form-group form-spin-group'] input[name='adults']:first-of-type
 ${ChildsValue} =    css:div[class='form-group form-spin-group'] input[name='child']:first-of-type
+${ChildsValueDefault} =    css:div[class='form-group form-spin-group'] input[name='children']:first-of-type
 ${HotelNameValue} =  css:h2.name
 ${LatestBlogTitle} =  xpath://h2[text()='Latest on blogs']
+${HotelLableInListView} =  xpath://div[text()='Hotels']
