@@ -5,7 +5,8 @@ Library    os
 Library    Collections
 Library    String
 Library    DateTime
-Resource    ../Common/php_travels_hotels_variables.txt
+Resource    Common/php_travels_hotels_variables.txt
+Resource    Common/php_travels_flights_variables.txt
 
 *** Keywords ***
 Open Browser and Login    [Arguments]    ${BASEURL}  ${BROWSER}   ${BROWSERPATH}    ${USERNAME}   ${PASSWORD}
@@ -165,3 +166,9 @@ Replace Dynamic Elements    [Arguments]    ${element}    ${value}
 Get Date With Days    [Arguments]    ${incrementDays}
     ${date} =    Get Current Date    result_format=%d/%m/%Y    increment=${incrementDays} day
     [Return]     ${date}
+
+
+#Flight keyword are started from here....*** Variables ***
+
+Search Flights    [Arguments]    ${flightType}    ${fromDate}    ${toDate}    ${depart}
+    Click Element    css:a[data-name='flights']
