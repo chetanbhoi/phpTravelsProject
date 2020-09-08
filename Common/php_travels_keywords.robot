@@ -5,7 +5,7 @@ Library    os
 Library    Collections
 Library    String
 Library    DateTime
-Resource    ../Common/php_travels_variables.txt
+Resource    ../Common/php_travels_hotels_variables.txt
 
 *** Keywords ***
 Open Browser and Login    [Arguments]    ${BASEURL}  ${BROWSER}   ${BROWSERPATH}    ${USERNAME}   ${PASSWORD}
