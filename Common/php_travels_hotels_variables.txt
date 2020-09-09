@@ -20,6 +20,7 @@ ${LoginLabel}  xpath://h3[text() ='Login']
 ${HotelNavTab}  xpath://nav[@class ='menu-horizontal-02']//a[contains(text(),'Hotel')]
 ${SearchLabelInput}  css:div[class='select2-container form-control hotelsearch locationlistHotels'] > a
 ${SearchInput}  css:div#select2-drop>div>input
+${SearchingElement}  css:div#select2-drop>ul.select2-results li[class='select2-searching']
 ${SearchListView}  css:div#select2-drop>ul.select2-results li
 ${SearchButton}  xpath://div[@id ='hotels']//button[contains(text(),'Search')]
 ${SearchListedValue}  xpath://ul[@class='select2-result-sub']//span[contains(text(),'%s%')]
