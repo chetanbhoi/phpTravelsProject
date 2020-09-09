@@ -1,0 +1,4 @@
+*** Variables ***
+${LBL_CabinClass_First}  First
+${LBL_CabinClass_Economy}  Economy
+${LBL_CabinClass_Business}  Business
