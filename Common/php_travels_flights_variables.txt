@@ -1,1 +1,33 @@
 *** Variables ***
+${HomeLogoImage}  css:div[class ='header-logo go-right'] a img
+${FlightNavTab}   css:a[data-name='flights']
+${CabinClassDropDown}   css:div[class='form-icon-left flightclass'] a > span
+${CabinClass}   xpath://li[text()='%s%']
+${DefaultCabinClass}  xpath:(//a[@class='chosen-single']//span)[1]
+${LocationFrom}  css:div#s2id_location_from a
+${DefaultLocationFrom}  css:div#s2id_location_from a span.select2-chosen
+${SelectedFromValue}  css:div#s2id_location_from a span.select2-chosen
+${SelectedToValue}  css:div#s2id_location_to a span.select2-chosen
+${LocationInput}  css:div#select2-drop div.select2-search > input
+${LocationResultView}  css:ul.select2-results > li
+${LocationTo}  css:div#s2id_location_to a
+${DefualtLocationTo}  css:div#s2id_location_to a span.select2-chosen
+${CSS_FlightStartDate}  css:input#FlightsDateStart
+${FlightResultView}  xpath://ul[@class='select2-results']//li
+${FlightResultViewValue}  xpath://ul[@class='select2-results']//li//span
+${SearchingElement}  css:div#select2-drop>ul.select2-results li[class='select2-searching']
+${FlightSearchButton}  xpath://div[@class='col-lg-1 col-sm-12 col-xs-12']//button[contains(text(),'Search')]
+${FlightAdultPersonInput}  css:input[name='fadults']
+${FlightAdultsPlusButton}  xpath://input[@name='fadults']/..//span//button[text()='+']
+${FlightAdultsMinusButton}  xpath://input[@name='fadults']/..//span//button[text()='-']
+${FlightChildPersonInput}  css:input[name='fchildren']
+${FlightChildPlusButton}  xpath://input[@name='fchildren']/..//span//button[text()='+']
+${FlightChildMinusButton}  xpath://input[@name='fchildren']/..//span//button[text()='-']
+${FlightInfantPersonInput}  css:input[name='finfant']
+${FlightInfantPlusButton}  xpath://input[@name='finfant']/..//span//button[text()='+']
+${FlightInfantMinusButton}  xpath://input[@name='finfant']/..//span//button[text()='-']
+${LatestBlogTitle} =  xpath://h2[text()='Latest on blogs']
+${FlightListData} =  css:ul#LIST > li
+${FlightListCity} =  css:li:first-of-type p.theme-search-results-item-flight-section-meta-city
+${FlightCabinClass} =  css:p.theme-search-results-item-price-sign
+${FilterSearchLabel} =  xpath://h4[text()='Filter Search']
