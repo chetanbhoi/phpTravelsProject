@@ -30,14 +30,38 @@ valid_hotel_name_and_date_and_persons = {
         }
 }
 #Flights Test Data......................................
-valid_flight_name = {
+search_flights_with_all_valid_fields = {
     'flight':
         {
-            'from': 'test',
-            'to': 'test',
-            'depart': 'sdfaf',
-            'adult': 'sdfaf',
-            'child': 'sdfaf',
-            'infant': 'sdfaf',
+            'cabinClass': 'First',
+            'fromLocation': 'Ahmedabad',
+            'toLocation': 'Delhi',
+            'adult': '2',
+            'child': '2',
+            'infant': '0',
+        }
+
+}
+search_flights_with_invalid_locations = {
+    'flight':
+        {
+            'cabinClass': 'First',
+            'fromLocation': 'Ahmedabad',
+            'toLocation': 'Delhi',
+            'adult': '2',
+            'child': '2',
+            'infant': '0',
+        }
+
+}
+search_flights_with_only_valid_locations = {
+    'flight':
+        {
+            'cabinClass': 'First',
+            'fromLocation': 'Ahmedabad',
+            'toLocation': 'Delhi',
+            'adult': '2',
+            'child': '2',
+            'infant': '0',
         }
 }
