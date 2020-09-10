@@ -26,7 +26,7 @@ Open Browser and Maximize    [Arguments]    ${BASEURL}    ${BROWSER}    ${BROWSE
 
 SignUp Into phpTravels    [Arguments]  ${email}  ${password}  ${firstName}  ${lastName}
     Click Element  ${MyAccountDropDown}
-    Wait Until Element is Visible    ${SignUpLink}
+    Wait Until Element Is Visible    ${SignUpLink}
     Click Element  ${SignUpLink}
     Input Text  ${FirstNameInput}  ${firstName}
     Input Text  ${LastNameInput}  ${lastName}
@@ -36,7 +36,7 @@ SignUp Into phpTravels    [Arguments]  ${email}  ${password}  ${firstName}  ${la
     Input Text  ${ConfirmPasswordInput}  ${password}
     Execute Javascript  window.scrollTo(0,1000)
     Click Button  ${SignUpButton}
-    Wait Until Element is Visible    xpath://*[contains(text(),'Hi, ${firstName} ${lastName}')]
+    Wait Until Element Is Visible    xpath://*[contains(text(),'Hi, ${firstName} ${lastName}')]
 
 Login Into phpTravels    [Arguments]     ${username}     ${password}
     Click Element  ${MyAccountDropDown}
@@ -44,7 +44,7 @@ Login Into phpTravels    [Arguments]     ${username}     ${password}
     Input Text  ${UsernameInput}  ${username}
     Input Text  ${PasswordInput}  ${password}
     Click Button  ${LoginButton}
-    Wait Until Element is Visible    xpath://*[contains(text(),'Hi, ${USERFNAME} ${USERLNAME}')]
+    Wait Until Element Is Visible    xpath://*[contains(text(),'Hi, ${USERFNAME} ${USERLNAME}')]
     ${accName} =    Get Text   ${MyAccountDropDown}
     [Return]    ${accName}
 
@@ -52,18 +52,18 @@ Logout From phpTravels
     Click Element  ${HomeLogoImage}
     Click Element  ${MyAccountDropDown}
     Click Element  ${LogoutLink}
-    Wait Until Element is Visible    ${LoginLabel}
+    Wait Until Element Is Visible    ${LoginLabel}
 
 Search Hotel By Name    [Arguments]    ${searchValue}    ${checkIn}=${EMPTY}     ${checkOut}=${EMPTY}     ${adults}=${EMPTY}     ${children}=${EMPTY}
     Click Element    ${HomeLogoImage}
     Scroll Element Into View    ${LatestBlogTitle}
-    Wait Until Element is Visible    ${HotelNavTab}
+    Wait Until Element Is Visible    ${HotelNavTab}
     Click Element    ${HotelNavTab}
-    Wait Until Element is Visible    ${SearchLabelInput}
+    Wait Until Element Is Visible    ${SearchLabelInput}
     Click Element    ${SearchLabelInput}
     Input Text       ${SearchInput}    ${searchValue}
 
-    Wait Until Element is Visible    ${SearchListView}
+    Wait Until Element Is Visible    ${SearchListView}
     Run Keyword And Return Status   wait until keyword succeeds    1 min    5 sec    Element Should Not Be Visible    ${SearchingElement}
     ${length} =  Get Element Count    ${SearchListView}
     ${noResultValue} =    Run Keyword If    '${length}' == '1'    Get Text    ${SearchListView}
@@ -78,10 +78,10 @@ Search Hotel By Name    [Arguments]    ${searchValue}    ${checkIn}=${EMPTY}    
     ${defaultAdultValue} =     Run Keyword If    '${adults}' == '${EMPTY}'   Get Element Attribute    ${AdultsValue}    value
     ${defaultChildValue} =     Run Keyword If    '${children}' == '${EMPTY}'   Get Element Attribute    ${ChildsValueDefault}     placeholder
 
-    Run Keyword If    '${checkIn}' != '${EMPTY}'    Send CheckIn Date    ${checkIn}
-    Run Keyword If    '${checkOut}' != '${EMPTY}'    Send checkout Date    ${checkOut}
-    Run Keyword If    '${adults}' != '${EMPTY}'     Select Persons    ${adults}    adults
-    Run Keyword If    '${children}' != '${EMPTY}'    Select Persons    ${children}    children
+    Run Keyword If    '${checkIn}' != '${EMPTY}'    Send Date To Input    ${CheckInDateInput}    ${checkIn}
+    Run Keyword If    '${checkOut}' != '${EMPTY}'    Send Date To Input    ${CheckOutDateInput}    ${checkOut}
+    Run Keyword If    '${adults}' != '${EMPTY}'     Select Person    ${adults}    ${PersonAdultsInput}  ${PersonAdultsPlusButton}  ${PersonAdultsMinusButton}
+    Run Keyword If    '${children}' != '${EMPTY}'    Select Person    ${children}    ${PersonChildInput}  ${PersonChildPlusButton}  ${PersonChildMinusButton}
 
     Wait Until Element Is Visible    ${SearchButton}
     Run Keyword If    '${length}' > '1'  Click Element    ${SearchButton}
@@ -115,47 +115,15 @@ Take ScreenShot On Fail TestCase
     Run Keyword If Test Failed    Capture Page Screenshot    ${TEST NAME}.png
     Run Keyword If Test Failed    Log Source
 
-Send CheckOut Date    [Arguments]    ${date}
-    Click Element    ${CheckOutDateInput}
-    Clear Element Text    ${CheckOutDateInput}
-    Input Text    ${CheckOutDateInput}    ${date}
-    Press Keys    ${CheckOutDateInput}    TAB
+Send Date To Input    [Arguments]    ${elementInput}    ${date}
+    Click Element    ${elementInput}
+    Clear Element Text    ${elementInput}
+    Input Text    ${elementInput}    ${date}
+    Press Keys    ${elementInput}    TAB
 
-Send CheckIn Date    [Arguments]    ${date}
-    Click Element    ${CheckInDateInput}
-    Clear Element Text    ${CheckInDateInput}
-    Input Text    ${CheckInDateInput}   ${date}
-    Press Keys   ${CheckInDateInput}    TAB
-
-Select Persons    [Arguments]    ${numberOfPerson}    ${type}
-    ${name} =    Convert To Lower Case    ${type}
-    ${PersonInput} =   Replace Dynamic Elements    ${PersonInput}   ${name}
-    ${PersonPlusButton} =    Replace Dynamic Elements    ${PersonPlusButton}   ${name}
-    ${PersonMinusButton} =    Replace Dynamic Elements   ${PersonMinusButton}    ${name}
-    Wait Until Element Is Visible    ${PersonInput}
-    ${currentPersonValue} =   Get Element Attribute    ${PersonInput}    value
-    ${numberOfPerson} =    Convert To Integer    ${numberOfPerson}
-    ${currentPersonValue} =    Convert To Integer    ${currentPersonValue}
-
-    ${flag} =    Set Variable if    ${currentPersonValue} == ${numberOfPerson}    0
-    ...    ${currentPersonValue} < ${numberOfPerson}    1
-    ...    ${currentPersonValue} > ${numberOfPerson}    2
-
-    ${tclick} =   Run Keyword If    ${flag}==1   Evaluate     ${numberOfPerson}-${currentPersonValue}
-    ...    ELSE IF   ${flag}==2   Evaluate     ${currentPersonValue}-${numberOfPerson}
-
-    Run Keyword If    ${flag} == 1    Add Person Value      ${PersonPlusButton}    ${tclick}
-    ...    ELSE IF    ${flag} == 2    Minus Person Value    ${PersonMinusButton}    ${tclick}
-
-
-Add Person Value    [Arguments]    ${PersonPlusButton}    ${numberOfClick}
+Update Person Value    [Arguments]    ${PersonButton}    ${numberOfClick}
     FOR    ${i}   IN RANGE    ${numberOfClick}
-           Click Element    ${PersonPlusButton}
-    END
-
-Minus Person Value    [Arguments]   ${PersonMinusButton}    ${numberOfClick}
-    FOR    ${i}   IN RANGE    ${numberOfClick}
-           Click Element    ${PersonMinusButton}
+           Click Element    ${PersonButton}
     END
 
 Replace Dynamic Elements    [Arguments]    ${element}    ${value}
@@ -175,89 +143,87 @@ Search Flights    [Arguments]    ${flightType}=${EMPTY}    ${fromLocation}=${EMP
     Wait Until Element Is Visible    ${FlightNavTab}
     Click Element    ${FlightNavTab}
 
-    scroll element into view    ${LatestBlogTitle}
+    Scroll Element Into View    ${LatestBlogTitle}
     #Select FlighType
-    ${flightType} =    run keyword if    '${flightType}'!='${EMPTY}'    Select Flight Type Class    ${flightType}
-    ...    ELSE     get text    ${DefaultCabinClass}
+    ${flightType} =    Run Keyword If    '${flightType}'!='${EMPTY}'    Select Flight Type Class    ${flightType}
+    ...    ELSE     Get Text    ${DefaultCabinClass}
 
     #select from locatioin....
-    ${fromLocationAliase} =    run keyword if    '${fromLocation}'!='${EMPTY}'  Select Flight Location    ${LocationFrom}    ${fromLocation}
-    ...    ELSE    get text    ${DefaultLocationFrom}
+    ${fromLocationAliase} =    Run Keyword If    '${fromLocation}'!='${EMPTY}'  Select Flight Location    ${LocationFrom}    ${fromLocation}
+    ...    ELSE    Get Text    ${DefaultLocationFrom}
 
     #Select to location
-    ${toLocationAliase} =    run keyword if    '${toLocation}'!='${EMPTY}'  Select Flight Location    ${LocationTo}    ${toLocation}
-    ...    ELSE    get text    ${DefaultLocationTo}
+    ${toLocationAliase} =    Run Keyword If    '${toLocation}'!='${EMPTY}'  Select Flight Location    ${LocationTo}    ${toLocation}
+    ...    ELSE    Get Text    ${DefaultLocationTo}
 
     #Select depart date
-    ${dateLocator} =    split string    ${CSS_FlightStartDate}    :
-    run keyword if    '${departDate}'!='${EMPTY}'    Execute Javascript          document.querySelector("${dateLocator}[1]").removeAttribute("readonly");
-    run keyword if    '${departDate}'!='${EMPTY}'    Execute Javascript          document.querySelector("${dateLocator}[1]").setAttribute("value", "${departDate}");
+    ${dateLocator} =    Split String    ${CSS_FlightStartDate}    :
+    Run Keyword If    '${departDate}'!='${EMPTY}'    Execute Javascript          document.querySelector("${dateLocator}[1]").removeAttribute("readonly");
+    Run Keyword If    '${departDate}'!='${EMPTY}'    Execute Javascript          document.querySelector("${dateLocator}[1]").setAttribute("value", "${departDate}");
 
     #Select Adults
-    run keyword if    '${adults}'!='${EMPTY}'    Select Flight Person    ${adults}    ${FlightAdultPersonInput}  ${FlightAdultsPlusButton}  ${FlightAdultsMinusButton}
+    Run Keyword If    '${adults}'!='${EMPTY}'    Select Person    ${adults}    ${FlightAdultPersonInput}  ${FlightAdultsPlusButton}  ${FlightAdultsMinusButton}
 
     #Select Childs
-    run keyword if    '${childs}'!='${EMPTY}'    Select Flight Person    ${childs}    ${FlightChildPersonInput}  ${FlightChildPlusButton}  ${FlightChildMinusButton}
+    Run Keyword If    '${childs}'!='${EMPTY}'    Select Person    ${childs}    ${FlightChildPersonInput}  ${FlightChildPlusButton}  ${FlightChildMinusButton}
 
     #Select Infants
-    run keyword if    '${infant}'!='${EMPTY}'    Select Flight Person    ${infant}    ${FlightInfantPersonInput}  ${FlightInfantPlusButton}  ${FlightInfantMinusButton}
+    Run Keyword If    '${infant}'!='${EMPTY}'    Select Person    ${infant}    ${FlightInfantPersonInput}  ${FlightInfantPlusButton}  ${FlightInfantMinusButton}
 
     #Click on search button
     Click Element    ${FlightSearchButton}
 
     #Verify details page
-    wait until element is visible    ${FilterSearchLabel}
+    Wait Until Element Is Visible    ${FilterSearchLabel}
     @{listLI} =    Get WebElements    ${FlightListData}
-    ${listLIcount} =    get element count    ${FlightListData}
-    ${response} =    set variable    True
+    ${listLIcount} =    Get Element Count    ${FlightListData}
+    ${response} =    Set Variable    True
     FOR    ${element}    IN    @{listLI}
-        wait until element is visible    ${FlightListCity}
+        Wait Until Element Is Visible    ${FlightListCity}
         @{listP} =    Get WebElements    ${FlightListCity}
-        ${fromTxt} =    get text    ${listP}[0]
-        ${toTxt} =    get text    ${listP}[1]
-        ${classValue} =    get text     ${FlightCabinClass}
-        run keyword if    '${fromTxt}' != '${fromLocationAliase}'    set variable    ${False}
-        run keyword if    '${toTxt}' != '${toLocationAliase}'    set variable    ${False}
-        run keyword if    '${classValue}' != '${flightType}'    set variable    ${False}
+        ${fromTxt} =    Get Text    ${listP}[0]
+        ${toTxt} =    Get Text    ${listP}[1]
+        ${classValue} =    Get Text     ${FlightCabinClass}
+        Run Keyword If    '${fromTxt}' != '${fromLocationAliase}'    Set Variable    ${False}
+        Run Keyword If    '${toTxt}' != '${toLocationAliase}'    Set Variable    ${False}
+        Run Keyword If    '${classValue}' != '${flightType}'    Set Variable    ${False}
     END
     [Return]    ${response}
 
 
-Select Flight Person    [Arguments]    ${numberOfPerson}    ${personInputElement}    ${PersonPlusButton}    ${PersonMinusButton}
+Select Person    [Arguments]    ${numberOfPerson}    ${personInputElement}    ${PersonPlusButton}    ${PersonMinusButton}
     Wait Until Element Is Visible    ${personInputElement}
     ${currentPersonValue} =   Get Element Attribute    ${personInputElement}    value
     ${numberOfPerson} =    Convert To Integer    ${numberOfPerson}
     ${currentPersonValue} =    Convert To Integer    ${currentPersonValue}
 
-    ${flag} =    Set Variable if    ${currentPersonValue} == ${numberOfPerson}    0
+    ${flag} =    Set Variable If    ${currentPersonValue} == ${numberOfPerson}    0
     ...    ${currentPersonValue} < ${numberOfPerson}    1
     ...    ${currentPersonValue} > ${numberOfPerson}    2
 
     ${tclick} =   Run Keyword If    ${flag}==1   Evaluate     ${numberOfPerson}-${currentPersonValue}
     ...    ELSE IF   ${flag}==2   Evaluate     ${currentPersonValue}-${numberOfPerson}
 
-    wait until element is visible    ${PersonPlusButton}
-    Run Keyword If    ${flag} == 1    Add Person Value      ${PersonPlusButton}    ${tclick}
-    ...    ELSE IF    ${flag} == 2    Minus Person Value    ${PersonMinusButton}    ${tclick}
-
+    Run Keyword If    ${flag} == 1    Update Person Value      ${PersonPlusButton}    ${tclick}
+    ...    ELSE IF    ${flag} == 2    Update Person Value    ${PersonMinusButton}    ${tclick}
 
 Select Flight Location    [Arguments]    ${locationElement}    ${searchValue}
-    wait until element is visible    ${locationElement}
+    Wait Until Element Is Visible    ${locationElement}
     Click Element    ${locationElement}
-    wait until element is visible    ${LocationInput}
+    Wait Until Element Is Visible    ${LocationInput}
     Input Text    ${LocationInput}    ${searchValue}
-    Run Keyword And Return Status   wait until keyword succeeds    1 min    5 sec    Element Should Not Be Visible    ${SearchingElement}
+    Run Keyword And Return Status   Wait Until Keyword Succeeds    1 min    5 sec    Element Should Not Be Visible    ${SearchingElement}
 
-    ${flag} =   run keyword and return status    element should be visible    ${FlightResultView}
+    ${flag} =   Run Keyword And Return Status    Element Should Be Visible    ${FlightResultView}
 
-    run keyword if    '${flag}'=='False'    Press Keys    ${LocationInput}    TAB
-    run keyword if    '${flag}'=='True'    Click Element    ${FlightResultViewValue}
+    Run Keyword If    '${flag}'=='False'    Press Keys    ${LocationInput}    TAB
+    Run Keyword If    '${flag}'=='True'    Click Element    ${FlightResultViewValue}
 
-    ${selectedVale} =    set variable    ${locationElement} span.select2-chosen
-    ${selectedAliase} =    get text    ${selectedVale}
-    ${selectedAliase} =    run keyword if    '${flag}'=='True'    split string    ${selectedAliase}    (
-    ${selectedAliase} =    run keyword if    '${flag}'=='True'    split string    ${selectedAliase}[1]    )
-    ${response} =    set variable if    '${flag}'=='True'     ${selectedAliase}[0]
+    ${selectedVale} =    Set Variable    ${locationElement} span.select2-chosen
+    ${selectedAliase} =    Get Text    ${selectedVale}
+    ${selectedAliase} =    Run Keyword If    '${flag}'=='True'    Split string    ${selectedAliase}    (
+    ${selectedAliase} =    Run Keyword If    '${flag}'=='True'    Split string    ${selectedAliase}[1]    )
+    ${response} =    Set Variable If    '${flag}'=='True'     ${selectedAliase}[0]
     ...    '${flag}'=='False'     ${selectedAliase}
 
     [Return]    ${response}
@@ -266,10 +232,10 @@ Select Flight Type Class    [Arguments]    ${flightClass}
     Wait Until Element Is Visible    ${CabinClassDropDown}
     Click Element    ${CabinClassDropDown}
 
-    ${name} =    convert to lower case    ${flightClass}
-    ${flightClassName} =  run keyword if   '${name}'=='first'  set variable    First
-    ...    ELSE IF    '${name}'=='economy'    set variable    Economy
-    ...    ELSE    '${name}'=='business'    set variable    Business
+    ${name} =    Convert To Lower Case    ${flightClass}
+    ${flightClassName} =  Run Keyword If   '${name}'=='first'  Set Variable    First
+    ...    ELSE IF    '${name}'=='economy'    Set Variable    Economy
+    ...    ELSE    '${name}'=='business'    Set Variable    Business
 
     ${CabinClass} =    Replace Dynamic Elements    ${CabinClass}    ${flightClassName}
     Wait Until Element Is Visible    ${CabinClass}
