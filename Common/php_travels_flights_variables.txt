@@ -11,7 +11,7 @@ ${SelectedToValue}  css:div#s2id_location_to a span.select2-chosen
 ${LocationInput}  css:div#select2-drop div.select2-search > input
 ${LocationResultView}  css:ul.select2-results > li
 ${LocationTo}  css:div#s2id_location_to a
-${DefualtLocationTo}  css:div#s2id_location_to a span.select2-chosen
+${DefaultLocationTo}  css:div#s2id_location_to a span.select2-chosen
 ${CSS_FlightStartDate}  css:input#FlightsDateStart
 ${FlightResultView}  xpath://ul[@class='select2-results']//li
 ${FlightResultViewValue}  xpath://ul[@class='select2-results']//li//span
