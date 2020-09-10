@@ -29,16 +29,15 @@ valid_hotel_name_and_date_and_persons = {
             "child": '5'
         }
 }
-#Flights Test Data......................................
 search_flights_with_all_valid_fields = {
     'flight':
         {
             'cabinClass': 'First',
             'fromLocation': 'Ahmedabad',
             'toLocation': 'Delhi',
-            'adult': '2',
-            'child': '2',
-            'infant': '0',
+            'adult': '4',
+            'child': '4',
+            'infant': '2'
         }
 
 }
@@ -50,7 +49,7 @@ search_flights_with_invalid_locations = {
             'toLocation': 'Delhi',
             'adult': '2',
             'child': '2',
-            'infant': '0',
+            'infant': '0'
         }
 
 }
@@ -62,6 +61,6 @@ search_flights_with_only_valid_locations = {
             'toLocation': 'Delhi',
             'adult': '2',
             'child': '2',
-            'infant': '0',
+            'infant': '0'
         }
 }
