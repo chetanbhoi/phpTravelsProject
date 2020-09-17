@@ -1,7 +1,7 @@
 *** Settings ***
 #Author    chetan.bhoi
 Resource  ../Common/php_travels_resources.txt
-Force Tags    TC-2855001
+Force Tags    SC 001.1
 Suite Setup  Open Browser and Login    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}   ${USERNAME}  ${PASSWORD}
 Suite Teardown  Logout and Close Browser
 Test Teardown  Take ScreenShot On Fail TestCase
