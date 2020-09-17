@@ -135,9 +135,15 @@ Get Date With Days    [Arguments]    ${incrementDays}    ${result_formate}=%d/%m
     [Return]     ${date}
 
 
-#Flight keyword are started from here....*** Variables ***
+Search Flights    [Arguments]    ${searchData}
+    ${flightType} =    Set Variable    ${searchData["flight"]["cabinClass"]}
+    ${fromLocation} =    Set Variable    ${searchData["flight"]["fromLocation"]}
+    ${toLocation} =    Set Variable    ${searchData["flight"]["toLocation"]}
+    ${adults} =    Set Variable    ${searchData["flight"]["adult"]}
+    ${childs} =    Set Variable    ${searchData["flight"]["child"]}
+    ${infant} =    Set Variable    ${searchData["flight"]["infant"]}
+    ${departDate} =    Get Date With Days    3    %Y-%m-%d
 
-Search Flights    [Arguments]    ${flightType}=${EMPTY}    ${fromLocation}=${EMPTY}    ${toLocation}=${EMPTY}    ${departDate}=${EMPTY}    ${adults}=${EMPTY}    ${childs}=${EMPTY}    ${infant}=${EMPTY}
     #Navigate to Flights
     Click Element    ${HomeLogoImage}
     Wait Until Element Is Visible    ${FlightNavTab}
@@ -145,16 +151,14 @@ Search Flights    [Arguments]    ${flightType}=${EMPTY}    ${fromLocation}=${EMP
 
     Scroll Element Into View    ${LatestBlogTitle}
     #Select FlighType
-    ${flightType} =    Run Keyword If    '${flightType}'!='${EMPTY}'    Select Flight Type Class    ${flightType}
-    ...    ELSE     Get Text    ${DefaultCabinClass}
+    Run Keyword If    '${flightType}'!=''    Select Flight Type Class    ${flightType}
 
     #select from locatioin....
-    ${fromLocationAliase} =    Run Keyword If    '${fromLocation}'!='${EMPTY}'  Select Flight Location    ${LocationFrom}    ${fromLocation}
-    ...    ELSE    Get Text    ${DefaultLocationFrom}
+    Wait Until Element Is Visible    ${LocationFrom}
+    Run Keyword If    '${fromLocation}'!=''  Select Flight Location    ${LocationFrom}    ${fromLocation}
 
     #Select to location
-    ${toLocationAliase} =    Run Keyword If    '${toLocation}'!='${EMPTY}'  Select Flight Location    ${LocationTo}    ${toLocation}
-    ...    ELSE    Get Text    ${DefaultLocationTo}
+    Run Keyword If    '${toLocation}'!=''  Select Flight Location    ${LocationTo}    ${toLocation}
 
     #Select depart date
     ${dateLocator} =    Split String    ${CSS_FlightStartDate}    :
@@ -162,19 +166,23 @@ Search Flights    [Arguments]    ${flightType}=${EMPTY}    ${fromLocation}=${EMP
     Run Keyword If    '${departDate}'!='${EMPTY}'    Execute Javascript          document.querySelector("${dateLocator}[1]").setAttribute("value", "${departDate}");
 
     #Select Adults
-    Run Keyword If    '${adults}'!='${EMPTY}'    Select Person    ${adults}    ${FlightAdultPersonInput}  ${FlightAdultsPlusButton}  ${FlightAdultsMinusButton}
+    Run Keyword If    '${adults}'!=''    Select Person    ${adults}    ${FlightAdultPersonInput}  ${FlightAdultsPlusButton}  ${FlightAdultsMinusButton}
 
     #Select Childs
-    Run Keyword If    '${childs}'!='${EMPTY}'    Select Person    ${childs}    ${FlightChildPersonInput}  ${FlightChildPlusButton}  ${FlightChildMinusButton}
+    Run Keyword If    '${childs}'!=''    Select Person    ${childs}    ${FlightChildPersonInput}  ${FlightChildPlusButton}  ${FlightChildMinusButton}
 
     #Select Infants
-    Run Keyword If    '${infant}'!='${EMPTY}'    Select Person    ${infant}    ${FlightInfantPersonInput}  ${FlightInfantPlusButton}  ${FlightInfantMinusButton}
+    Run Keyword If    '${infant}'!=''    Select Person    ${infant}    ${FlightInfantPersonInput}  ${FlightInfantPlusButton}  ${FlightInfantMinusButton}
 
     #Click on search button
     Click Element    ${FlightSearchButton}
 
-    #Verify details page
+
+Verify Flights Details Page    [Arguments]    ${searchData}
+    ${fromLocation} =    Set Variable    ${searchData["verify_data"]["fromLocation"]}
+    ${toLocation} =    Set Variable    ${searchData["verify_data"]["toLocation"]}
     Wait Until Element Is Visible    ${FilterSearchLabel}
+
     @{listLI} =    Get WebElements    ${FlightListData}
     ${listLIcount} =    Get Element Count    ${FlightListData}
     ${response} =    Set Variable    True
@@ -184,11 +192,9 @@ Search Flights    [Arguments]    ${flightType}=${EMPTY}    ${fromLocation}=${EMP
         ${fromTxt} =    Get Text    ${listP}[0]
         ${toTxt} =    Get Text    ${listP}[1]
         ${classValue} =    Get Text     ${FlightCabinClass}
-        Run Keyword If    '${fromTxt}' != '${fromLocationAliase}'    Set Variable    ${False}
-        Run Keyword If    '${toTxt}' != '${toLocationAliase}'    Set Variable    ${False}
-        Run Keyword If    '${classValue}' != '${flightType}'    Set Variable    ${False}
+        Should Be Equal    ${fromTxt}    ${fromLocation}    Mismatch From Location of Flights
+        Should Be Equal    ${toTxt}    ${toLocation}    Mismatch To Location of Flights
     END
-    [Return]    ${response}
 
 
 Select Person    [Arguments]    ${numberOfPerson}    ${personInputElement}    ${PersonPlusButton}    ${PersonMinusButton}
@@ -219,15 +225,6 @@ Select Flight Location    [Arguments]    ${locationElement}    ${searchValue}
     Run Keyword If    '${flag}'=='False'    Press Keys    ${LocationInput}    TAB
     Run Keyword If    '${flag}'=='True'    Click Element    ${FlightResultViewValue}
 
-    ${selectedVale} =    Set Variable    ${locationElement} span.select2-chosen
-    ${selectedAliase} =    Get Text    ${selectedVale}
-    ${selectedAliase} =    Run Keyword If    '${flag}'=='True'    Split string    ${selectedAliase}    (
-    ${selectedAliase} =    Run Keyword If    '${flag}'=='True'    Split string    ${selectedAliase}[1]    )
-    ${response} =    Set Variable If    '${flag}'=='True'     ${selectedAliase}[0]
-    ...    '${flag}'=='False'     ${selectedAliase}
-
-    [Return]    ${response}
-
 Select Flight Type Class    [Arguments]    ${flightClass}
     Wait Until Element Is Visible    ${CabinClassDropDown}
     Click Element    ${CabinClassDropDown}
@@ -241,4 +238,3 @@ Select Flight Type Class    [Arguments]    ${flightClass}
     Wait Until Element Is Visible    ${CabinClass}
     Click Element    ${CabinClass}
     Scroll Element Into View    ${LatestBlogTitle}
-    [Return]    ${name}
