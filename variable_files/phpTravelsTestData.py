@@ -1,4 +1,4 @@
-#Hotel Test Data......................................
+# Hotel Test Data......................................
 valid_hotel_name = {
     'options':
         {
@@ -29,38 +29,68 @@ valid_hotel_name_and_date_and_persons = {
             "child": '5'
         }
 }
-search_flights_with_all_valid_fields = {
+# Flight Test Data.................................................
+search_flights_with_defaults_fields = {
     'flight':
         {
-            'cabinClass': 'First',
-            'fromLocation': 'Ahmedabad',
-            'toLocation': 'Delhi',
-            'adult': '4',
-            'child': '4',
-            'infant': '2'
+            'cabinClass': '',
+            'fromLocation': '',
+            'toLocation': '',
+            'adult': '',
+            'child': '',
+            'infant': ''
+        },
+    'verify_data':
+        {
+            'fromLocation': 'LHE',
+            'toLocation': 'DXB',
         }
-
 }
 search_flights_with_invalid_locations = {
     'flight':
         {
-            'cabinClass': 'First',
+            'cabinClass': '',
+            'fromLocation': 'dsfasfsf',
+            'toLocation': 'Delsdafsafsahi',
+            'adult': '',
+            'child': '',
+            'infant': ''
+        },
+        "verify_data":
+        {
+            'fromLocation': 'LHE',
+            'toLocation': 'DXB'
+        }
+}
+search_flights_with_valid_locations = {
+    'flight':
+        {
+            'cabinClass': '',
             'fromLocation': 'Ahmedabad',
             'toLocation': 'Delhi',
-            'adult': '2',
-            'child': '2',
-            'infant': '0'
+            'adult': '',
+            'child': '',
+            'infant': ''
+        },
+        'verify_data':
+        {
+            'fromLocation': 'AMD',
+            'toLocation': 'DEL'
         }
-
 }
-search_flights_with_only_valid_locations = {
-    'flight':
+search_flights_with_all_valid_fields = {
+        'flight':
         {
             'cabinClass': 'First',
             'fromLocation': 'Ahmedabad',
             'toLocation': 'Delhi',
-            'adult': '2',
-            'child': '2',
-            'infant': '0'
+            'adult': '3',
+            'child': '3',
+            'infant': '2'
+        },
+        'verify_data':
+        {
+            'fromLocation': 'AMD',
+            'toLocation': 'DEL'
         }
 }
