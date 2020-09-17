@@ -1,0 +1,7 @@
+BROWSERPATH = "D:/Selenium/drivers/chromedriver.exe"
+BASEURL = "https://www.phptravels.net/"
+BROWSER = "chrome"
+USERNAME = "chetan@gmail.com"
+PASSWORD = "123456"
+USERFNAME = "Chetan"
+USERLNAME = "Bhoi"

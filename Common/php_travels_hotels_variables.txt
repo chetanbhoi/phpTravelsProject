@@ -1,0 +1,44 @@
+*** Variables ***
+${MyAccountDropDown}   css:div[class='dropdown dropdown-login dropdown-tab'] > a
+${SignUpLink}  css:div[class='dropdown-menu dropdown-menu-right show'] a:last-child[href*='register']
+${FirstNameInput}  css:input[name='firstname']
+${LastNameInput}  css:input[name='lastname']
+${MobileInput}  css:input[name='phone']
+${EmailInput}  css:input[name='email']
+${PasswordInput}  css:input[name='password']
+${ConfirmPasswordInput}  css:input[name='confirmpassword']
+${SignUpButton}  css:button[class='signupbtn btn_full btn btn-success btn-block btn-lg']
+${LoginLink}  css:div[class='dropdown-menu dropdown-menu-right show'] a:first-child[href*='login']
+${UsernameInput}  css:input[name='username']
+${LoginButton}  css:button[class='btn btn-primary btn-lg btn-block loginbtn']
+${HomeLogoImage}  css:div[class ='header-logo go-right'] a img
+${LogoutLink}  css:div[class='dropdown-menu dropdown-menu-right show'] a:last-child[href*='logout']
+${PersonAdultsInput}  xpath:(//input[@name ='adults'])[1]
+${PersonAdultsPlusButton}  xpath:(//input[@name ='adults'])[1]//..//span/button[text() ='+']
+${PersonAdultsMinusButton}  xpath:(//input[@name ='adults'])[1]//..//span/button[text() ='-']
+${PersonChildInput}  xpath:(//input[@name ='children'])[1]
+${PersonChildPlusButton}  xpath:(//input[@name ='children'])[1]//..//span/button[text() ='+']
+${PersonChildMinusButton}  xpath:(//input[@name ='children'])[1]//..//span/button[text() ='-']
+${LoginLabel}  xpath://h3[text() ='Login']
+${HotelNavTab}  xpath://nav[@class ='menu-horizontal-02']//a[contains(text(),'Hotel')]
+${SearchLabelInput}  css:div[class='select2-container form-control hotelsearch locationlistHotels'] > a
+${SearchInput}  css:div#select2-drop>div>input
+${SearchingElement}  css:div#select2-drop>ul.select2-results li[class='select2-searching']
+${SearchListView}  css:div#select2-drop>ul.select2-results li
+${SearchButton}  xpath://div[@id ='hotels']//button[contains(text(),'Search')]
+${SearchListedValue}  xpath://ul[@class='select2-result-sub']//span[contains(text(),'%s%')]
+${CheckOutDateInput}  css:input#checkout
+${CheckInDateInput}  css:input#checkin
+${DatePickerTitle}  xpath://div[@id='datepickers-container']//div[%s%]//nav[1]//div[@class='datepicker--nav-title']
+${DatePickerYear}  xpath://div[@id='datepickers-container']//div[%s%]//div[contains(@class,'datepicker--celldatepicker--cell-year')][@data-year='{year}']
+${DatePickerNextButton}  xpath://div[@id='datepickers-container']//div[%s%]//div[contains(@class,'datepicker--nav-action')][@data-action='next']
+${DatePickerMonth}  xpath://div[@id='datepickers-container']//div[$s%]//div[@class='datepicker--celldatepicker--cell-month'][@data-month='{month}']
+${DatePickerDays}  xpath://div[@id='datepickers-container']//div[%s%]//div[contains(@class,'datepicker--celldatepicker--cell-day')][@data-date='{day}'][@data-month='{month}']
+${CheckInDateValue} =   css:input[name='checkin']:first-of-type
+${CheckOutDateValue} =   css:input[name='checkout']:first-of-type
+${AdultsValue} =    css:div[class='form-group form-spin-group'] input[name='adults']:first-of-type
+${ChildsValue} =    css:div[class='form-group form-spin-group'] input[name='child']:first-of-type
+${ChildsValueDefault} =    css:div[class='form-group form-spin-group'] input[name='children']:first-of-type
+${HotelNameValue} =  css:h2.name
+${LatestBlogTitle} =  xpath://h2[text()='Latest on blogs']
+${HotelLableInListView} =  xpath://div[text()='Hotels']
