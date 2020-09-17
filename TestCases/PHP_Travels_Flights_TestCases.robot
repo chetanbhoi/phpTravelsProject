@@ -7,34 +7,24 @@ Suite Teardown  Logout and Close Browser
 Test Teardown  Take ScreenShot On Fail TestCase
 
 *** Test Cases ***
-Search Flights With All Valid Fields
-    ${flightType} =    Set Variable    ${search_flights_with_all_valid_fields["flight"]["cabinClass"]}
-    ${fromLocation} =    Set Variable    ${search_flights_with_all_valid_fields["flight"]["fromLocation"]}
-    ${toLocation} =    Set Variable    ${search_flights_with_all_valid_fields["flight"]["toLocation"]}
-    ${adult} =    Set Variable    ${search_flights_with_all_valid_fields["flight"]["adult"]}
-    ${child} =    Set Variable    ${search_flights_with_all_valid_fields["flight"]["child"]}
-    ${infant} =    Set Variable    ${search_flights_with_all_valid_fields["flight"]["infant"]}
-    ${departDate} =    Get Date With Days    3    %Y-%m-%d
-
-    ${response} =    Search Flights    ${flightType}    ${fromLocation}    ${toLocation}     ${departDate}   ${adult}   ${child}    ${infant}
-    Should Be Equal    ${response}    True
-
+Search Flights With All Defaults Values
+    ${searchData} =    Set Variable    ${search_flights_with_defaults_fields}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}
 
 Search Flights With Invalid Locations
-    ${fromLocation} =    Set Variable    ${search_flights_with_invalid_locations["flight"]["fromLocation"]}
-    ${toLocation} =    Set Variable    ${search_flights_with_invalid_locations["flight"]["toLocation"]}
-
-    ${response} =    Search Flights    ${EMPTY}    ${fromLocation}    ${toLocation}
-    Should Be Equal    ${response}    True
+    ${searchData} =    Set Variable    ${search_flights_with_invalid_locations}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}
 
 Search Flights With Only Valid Locations
-    ${fromLocation} =    Set Variable    ${search_flights_with_only_valid_locations["flight"]["fromLocation"]}
-    ${toLocation} =    Set Variable    ${search_flights_with_only_valid_locations["flight"]["toLocation"]}
-
-    ${response} =    Search Flights    ${EMPTY}    ${fromLocation}    ${toLocation}
-    Should Be Equal    ${response}    True
+    ${searchData} =    Set Variable    ${search_flights_with_valid_locations}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}
 
 
-Search Flights With All Defaults Values
-    ${response} =    Search Flights
-    Should Be Equal    ${response}    True
+Search Flights With All Valid Fields
+    ${searchData} =    Set Variable    ${search_flights_with_all_valid_fields}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}
+

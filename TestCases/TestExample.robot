@@ -18,9 +18,15 @@ ${BROWSERPATH}     D:/Selenium/drivers/chromedriver.exe
 
 
 *** Test Cases ***
-Verify fate
-    ${departDate} =    Get Date With Days  3    YYYY-MM-DD
-    log to console     ${departDate}
+Verify search flight
+    ${searchData} =    Set Variable    ${search_flights_with_all_valid_fields}
+    ${fromLocation} =    Set Variable    ${searchData["verify_data"]["fromLocation"]}
+    log to console    ${fromLocation}
+#    Search Flights    ${searchData}
+
+#Verify fate
+#    ${departDate} =    Get Date With Days  3    YYYY-MM-DD
+#    log to console     ${departDate}
 #Split value
 #    ${flag} =    set variable    False
 #    ${selectedAliase1} =    set variable    Ahmedabad (AMD)
@@ -58,6 +64,22 @@ Verify fate
 #    log to console    Start Browser
 
 *** Keywords ***
+Search Flights    [Arguments]    ${searchData}=${EMPTY}
+    ${fromLocation} =    Set Variable    ${searchData["flight"]["fromLocation"]}
+    ${toLocation} =    Set Variable    ${searchData["flight"]["toLocation"]}
+    ${adults} =    Set Variable    ${searchData["flight"]["adult"]}
+    ${childs} =    Set Variable    ${searchData["flight"]["child"]}
+    ${infant} =    Set Variable    ${searchData["flight"]["infant"]}
+    ${departDate} =    Get Date With Days    3    %Y-%m-%d
+    run keyword if    '${fromLocation}'!=''    log to console    existvlue
+    ...    ELSE    log to console    nullvalue
+    log to console    fromLocation: ${fromLocation}
+    log to console    toLocation: ${toLocation}
+    log to console    adults: ${adults}
+    log to console    childs: ${childs}
+    log to console    infant: ${infant}
+    log to console    departDate: ${departDate}
+
 Start Browser
     [Documentation]         Start browser on Selenium Grid
     Open Browser            ${URL}  ${BROWSER}  ${ALIAS}  ${REMOTE_URL}
