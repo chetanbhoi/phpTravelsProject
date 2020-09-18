@@ -22,9 +22,27 @@ Search Flights With Only Valid Locations
     Search Flights    ${searchData}
     Verify Flights Details Page    ${searchData}
 
-
 Search Flights With All Valid Fields
     ${searchData} =    Set Variable    ${search_flights_with_all_valid_fields}
     Search Flights    ${searchData}
     Verify Flights Details Page    ${searchData}
 
+Search Flights With Only Valid From Location And To Location As Default
+    ${searchData} =    Set Variable    ${search_flights_with_only_valid_fromLocation}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}
+
+Search Flights With Only Valid To Location And From Location As Default
+    ${searchData} =    Set Variable    ${search_flights_with_only_valid_toLocation}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}
+
+Search Flights With Valid From Location And Invalid To Location
+    ${searchData} =    Set Variable    ${search_flights_with_valid_fromLocation_invalid_toLocation}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}
+
+Search Flights With Invalid From Location And Valid To Location
+    ${searchData} =    Set Variable    ${search_flights_with_valid_toLocation_invalid_fromLocation}
+    Search Flights    ${searchData}
+    Verify Flights Details Page    ${searchData}

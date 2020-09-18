@@ -94,3 +94,67 @@ search_flights_with_all_valid_fields = {
             'toLocation': 'DEL'
         }
 }
+search_flights_with_valid_fromLocation_invalid_toLocation = {
+        'flight':
+        {
+            'cabinClass': 'First',
+            'fromLocation': 'Ahmedabad',
+            'toLocation': 'testigntolcoation',
+            'adult': '3',
+            'child': '3',
+            'infant': '2'
+        },
+        'verify_data':
+        {
+            'fromLocation': 'AMD',
+            'toLocation': 'DXB'
+        }
+}
+search_flights_with_valid_toLocation_invalid_fromLocation = {
+        'flight':
+        {
+            'cabinClass': 'First',
+            'fromLocation': 'teststts',
+            'toLocation': 'Delhi',
+            'adult': '3',
+            'child': '3',
+            'infant': '2'
+        },
+        'verify_data':
+        {
+            'fromLocation': 'LHE',
+            'toLocation': 'DEL'
+        }
+}
+search_flights_with_only_valid_toLocation = {
+        'flight':
+        {
+            'cabinClass': 'First',
+            'fromLocation': '',
+            'toLocation': 'Delhi',
+            'adult': '3',
+            'child': '3',
+            'infant': '2'
+        },
+        'verify_data':
+        {
+            'fromLocation': 'LHE',
+            'toLocation': 'DEL'
+        }
+}
+search_flights_with_only_valid_fromLocation = {
+        'flight':
+        {
+            'cabinClass': 'First',
+            'fromLocation': 'Ahmedabad',
+            'toLocation': '',
+            'adult': '3',
+            'child': '3',
+            'infant': '2'
+        },
+        'verify_data':
+        {
+            'fromLocation': 'AMD',
+            'toLocation': 'DXB'
+        }
+}
