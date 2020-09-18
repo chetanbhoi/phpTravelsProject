@@ -1,5 +1,5 @@
 BROWSERPATH = "D:/Selenium/drivers/chromedriver.exe"
-BASEURL = "https://www.phptravels.net/"
+BASEURL = "http://tabulator.info/"
 BROWSER = "chrome"
 USERNAME = "chetan@gmail.com"
 PASSWORD = "123456"

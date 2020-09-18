@@ -2,11 +2,12 @@
 Library    SeleniumLibrary
 Library    DateTime
 Library    String
+Resource    ../Common/tabulator_keywords.robot
 Resource  ../Common/php_travels_resources.txt
 Resource    ../Common/php_travels_flights_variables.txt
 Variables    ../variable_files/ConfigData.py
-#Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
-#Suite Teardown    Close Browser
+Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
+Suite Teardown    Close Browser
 
 *** Variables ***
 ${URL}                      about:none
@@ -16,13 +17,19 @@ ${REMOTE_URL}               http://192.168.1.100:4444/wd/hub
 ${DESIRED_CAPABILITIES}     platform:WIN10,name:chrome,version:86
 ${BROWSERPATH}     D:/Selenium/drivers/chromedriver.exe
 
+*** Variables ***
+${FlightListData} =  css:ul#LIST > li
+${FlightListCity} =  css:first-of-type p.theme-search-results-item-flight-section-meta-city
 
 *** Test Cases ***
-Verify search flight
-    ${searchData} =    Set Variable    ${search_flights_with_all_valid_fields}
-    ${fromLocation} =    Set Variable    ${searchData["verify_data"]["fromLocation"]}
-    log to console    ${fromLocation}
-#    Search Flights    ${searchData}
+Test loop
+    Filter Table By Name And Verify    nesfdsfdf
+
+#Verify search flight
+#    ${searchData} =    Set Variable    ${search_flights_with_all_valid_fields}
+#    ${fromLocation} =    Set Variable    ${searchData["verify_data"]["fromLocation"]}
+#    log to console    ${fromLocation}
+##    Search Flights    ${searchData}
 
 #Verify fate
 #    ${departDate} =    Get Date With Days  3    YYYY-MM-DD
@@ -131,3 +138,16 @@ Select Adults
     Wait Until Element Is Visible    ${FlightNavTab}
     Click Element    ${FlightNavTab}
     Wait Until Element Is Visible    xpath://input[@name='fadults']/..//span//button[text()='+']
+
+
+Sort Name By Assending
+        ${sortValue} =    Get Element Attribute    ${NameTableTitle}    aria-sort
+        Run Keyword If    '${sortValue}'!='asc'    Click Element    ${NameTableTitle}
+
+Sort Name By Desending
+        ${sortValue} =    Get Element Attribute    ${NameTableTitle}    aria-sort
+        Run Keyword If    '${sortValue}'!='desc'    Click Element    ${NameTableTitle}
+
+Hide Rating Field
+        ${disValue} =    Get Element Attribute    ${RatingTableTitle}    display
+Show Rating Field
