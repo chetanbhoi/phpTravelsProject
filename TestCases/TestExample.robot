@@ -6,8 +6,8 @@ Resource    ../Common/tabulator_keywords.robot
 Resource  ../Common/php_travels_resources.txt
 Resource    ../Common/php_travels_flights_variables.txt
 Variables    ../variable_files/ConfigData.py
-Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
-Suite Teardown    Close Browser
+#Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
+#Suite Teardown    Close Browser
 
 *** Variables ***
 ${URL}                      about:none
@@ -23,7 +23,36 @@ ${FlightListCity} =  css:first-of-type p.theme-search-results-item-flight-sectio
 
 *** Test Cases ***
 Test loop
-    Filter Table By Name And Verify    nesfdsfdf
+#    Filter Table By Name And Verify    nesfdsfdf
+    @{Listv} =    create list
+    @{Listv} =    append litvalue    @{Listv}
+    ${len} =    get length    ${Listv}
+    log to console    ${len}
+
+#List_at_place_change
+#    @{IFUP}    Create List    10    20
+#    log to console    ${IFUP[0]}
+#    Set List Value    ${IFUP}    0    30
+#    log to console    ${IFUP}
+
+Sort list integer
+    @{list_Int} =    Create List    1    2    20    5    3    7    2
+    ${len} =    get length   ${list_Int}
+    log to console    ${len}
+    FOR    ${i}    IN RANGE   ${len}
+        @{list_Int} =    SecondLoop    ${i}    @{list_Int}
+    END
+
+    FOR    ${i}    IN   @{list_Int}
+        log to console    listvalue: ${i}
+    END
+#Check Element Number
+#    @{MY_SIMPLE_LIST}=  Create List
+#    @{MY_SIMPLE_LIST} =    Demo Keyword    @{MY_SIMPLE_LIST}
+#    log to console    Name return:${MY_SIMPLE_LIST}
+#    @{MY_SIMPLE_LIST} =    Demo Keyword2    @{MY_SIMPLE_LIST}
+#    log to console    Name return:${MY_SIMPLE_LIST}
+
 
 #Verify search flight
 #    ${searchData} =    Set Variable    ${search_flights_with_all_valid_fields}
@@ -71,6 +100,12 @@ Test loop
 #    log to console    Start Browser
 
 *** Keywords ***
+Append litvalue    [Arguments]    @{list}
+    FOR    ${i}    IN RANGE    1-10
+        log to console    ${i}
+        append to list    ${list}    ${i}
+    END
+    [Return]    ${List}
 Search Flights    [Arguments]    ${searchData}=${EMPTY}
     ${fromLocation} =    Set Variable    ${searchData["flight"]["fromLocation"]}
     ${toLocation} =    Set Variable    ${searchData["flight"]["toLocation"]}
@@ -150,4 +185,26 @@ Sort Name By Desending
 
 Hide Rating Field
         ${disValue} =    Get Element Attribute    ${RatingTableTitle}    display
-Show Rating Field
+
+SecondLoop    [Arguments]    ${i}    @{listInt}
+    ${jlen} =    get length    ${listInt}
+    ${l} =    evaluate    ${i} + 1
+    FOR    ${j}    IN RANGE    ${l}    ${jlen}
+        ${iValue} =    set variable     ${listInt[${i}]}
+        ${jValue} =    set variable    ${listInt[${j}]}
+        ${temp} =    run keyword if    ${iValue} > ${jValue}    set variable    ${iValue}
+        run keyword if    ${iValue} > ${jValue}    Set List Value    ${listInt}    ${i}    ${jValue}
+        run keyword if    ${iValue} > ${jValue}    Set List Value    ${listInt}    ${j}    ${temp}
+    END
+    [Return]    @{listInt}
+
+
+Demo Keyword
+    [Arguments]   @{MY_SIMPLE_LIST}
+    append to list    ${MY_SIMPLE_LIST}    test1
+    [Return]    @{MY_SIMPLE_LIST}
+
+Demo Keyword2
+    [Arguments]   @{MY_SIMPLE_LIST}
+    append to list    ${MY_SIMPLE_LIST}    test51
+    [Return]    @{MY_SIMPLE_LIST}
