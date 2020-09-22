@@ -1,7 +1,8 @@
 *** Variables ***
 ${FilterTableByNameInput}  css:input[name='name']
 ${FilteredNameList}  css:div.tabulator-table > div div[tabulator-field='name']
-${NameTableTitle}  xpath:(//div[@tabulator-field='name'])[1]
+${TableColumnList}  css:div.tabulator-table > div div[tabulator-field='%s%']
+${TableHeaderTitle}  xpath:(//div[@tabulator-field='%s%'])[1]
 ${RatingTableTitle}  xpath:(//div[@tabulator-field='rating'])[1]
 ${RatingColumIsDisplayed}  xpath:(//div[@tabulator-field='rating'])[1][contains(@style,'display: none')]
-
+${NextPageButton}  xpath://button[@title='Next Page']
