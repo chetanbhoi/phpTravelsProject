@@ -87,3 +87,52 @@ sort_table_by_driver_field = {
             'sortType': 'asc'
         }
 }
+sort_table_by_name_field_as_desc = {
+        'sort':
+        {
+            'fieldName': 'name',
+            'sortType': 'desc'
+        }
+}
+sort_table_by_progress_field_as_desc = {
+        'sort':
+        {
+            'fieldName': 'progress',
+            'sortType': 'desc'
+        }
+}
+sort_table_by_gender_field_as_desc = {
+        'sort':
+        {
+            'fieldName': 'gender',
+            'sortType': 'desc'
+        }
+}
+sort_table_by_rating_field_as_desc = {
+        'sort':
+        {
+            'fieldName': 'rating',
+            'sortType': 'desc'
+        }
+}
+sort_table_by_color_field_as_desc = {
+        'sort':
+        {
+            'fieldName': 'col',
+            'sortType': 'desc'
+        }
+}
+sort_table_by_dob_field_as_desc = {
+        'sort':
+        {
+            'fieldName': 'dob',
+            'sortType': 'desc'
+        }
+}
+sort_table_by_driver_field_as_desc = {
+        'sort':
+        {
+            'fieldName': 'car',
+            'sortType': 'desc'
+        }
+}

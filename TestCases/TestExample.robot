@@ -3,11 +3,11 @@ Library    SeleniumLibrary
 Library    DateTime
 Library    String
 Resource    ../Common/tabulator_keywords.robot
-Resource  ../Common/php_travels_resources.txt
+Resource  ../Common/tabulator_resources.txt
 Resource    ../Common/php_travels_flights_variables.txt
 Variables    ../variable_files/ConfigData.py
-#Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
-#Suite Teardown    Close Browser
+Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
+Suite Teardown    Close Tabulator Browser
 
 *** Variables ***
 ${URL}                      about:none
@@ -22,12 +22,39 @@ ${FlightListData} =  css:ul#LIST > li
 ${FlightListCity} =  css:first-of-type p.theme-search-results-item-flight-section-meta-city
 
 *** Test Cases ***
-Test loop
-#    Filter Table By Name And Verify    nesfdsfdf
-    @{Listv} =    create list
-    @{Listv} =    append litvalue    @{Listv}
-    ${len} =    get length    ${Listv}
-    log to console    ${len}
+#Sorting Interget List
+#        ${fildName} =    set variable    progress
+#        ${sortType} =    set variable    desc
+#        ${TableHeaderTitle} =    replace string    ${TableHeaderTitle}    %s%      ${fildName}
+#        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+#        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+#        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+#        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+#        @{tempList} =    Create List
+#        @{originalList} =    Create List
+#        FOR    ${i}    IN RANGE    10
+#            @{originalList} =    Append Value To List     ${fildName}    @{originalList}
+#            ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
+#            run keyword if    ${flag}==False   Click Element      ${NextPageButton}
+#            ...    ELSE    exit for loop
+#        END
+#        log to console     ${originalList}
+#    @{tempList} =    Sort list integer    @{originalList}
+#    log to console    Ogiganal values............................
+#    FOR    ${i}    IN   @{originalList}
+#        log to console    listvalue: ${i}
+#    END
+#
+#    log to console    Temp values............................
+#    FOR    ${i}    IN   @{tempList}
+#        log to console    listvalue: ${i}
+#    END
+#Test loop
+##    Filter Table By Name And Verify    nesfdsfdf
+#    @{Listv} =    create list
+#    @{Listv} =    append litvalue    @{Listv}
+#    ${len} =    get length    ${Listv}
+#    log to console    ${len}
 
 #List_at_place_change
 #    @{IFUP}    Create List    10    20
@@ -35,17 +62,7 @@ Test loop
 #    Set List Value    ${IFUP}    0    30
 #    log to console    ${IFUP}
 
-Sort list integer
-    @{list_Int} =    Create List    1    2    20    5    3    7    2
-    ${len} =    get length   ${list_Int}
-    log to console    ${len}
-    FOR    ${i}    IN RANGE   ${len}
-        @{list_Int} =    SecondLoop    ${i}    @{list_Int}
-    END
 
-    FOR    ${i}    IN   @{list_Int}
-        log to console    listvalue: ${i}
-    END
 #Check Element Number
 #    @{MY_SIMPLE_LIST}=  Create List
 #    @{MY_SIMPLE_LIST} =    Demo Keyword    @{MY_SIMPLE_LIST}
@@ -99,7 +116,97 @@ Sort list integer
 #    go to    http://www.yahoo.co
 #    log to console    Start Browser
 
+Convert date into timestemp
+        ${fildName} =    set variable    dob
+        ${sortType} =    set variable    desc
+        ${TableHeaderTitle} =    replace string    ${TableHeaderTitle}    %s%      ${fildName}
+        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+        @{tempList} =    Create List
+        @{originalList} =    Create List
+        FOR    ${i}    IN RANGE    10
+            @{originalList} =    Append Value To List     ${fildName}    @{originalList}
+            ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
+            run keyword if    ${flag}==False   Click Element      ${NextPageButton}
+            ...    ELSE    exit for loop
+        END
+        @{tempList} =     Covnert To DataList     @{originalList}
+         lists should be equal    ${originalList}    ${tempList}
+
+#Covnert To DataList    [Arguments]    @{originalList}
+#        @{tempList} =    Create List
+#        FOR    ${i}    IN    @{originalList}
+#            @{date} =     split string    ${i}    /
+#            ${day} =    set variable    ${date}[0]
+#            ${month} =    set variable    ${date}[1]
+#            ${year} =    set variable    ${date}[2]
+#            ${tempDate} =    set variable    ${year}-${month}-${day}
+#            Append To List    ${tempList}    ${tempDate}
+#        END
+#        Sort List    ${tempList}
+#        @{tempList2} =    Create List
+#        FOR    ${i}    IN    @{tempList}
+#            @{date} =     split string    ${i}    -
+#            ${day} =    set variable    ${date}[2]
+#            ${month} =    set variable    ${date}[1]
+#            ${year} =    set variable    ${date}[0]
+#            ${tempDate} =    set variable    ${day}/${month}/${year}
+#            Append To List    ${tempList2}    ${tempDate}
+#        END
+#        log to console    After tempList    converting formate..................................................
+#        Read List Values     @{tempList2}
+#        log to console    After originalList formate..................................................
+#        Read List Values     @{originalList}
+##        lists should be equal    ${originalList}    ${tempList2}
+#    ${date} =    set variable    1400-05-19 00:00:00.000
+#    ${date1} =	Convert Date	${date}	    result_format=%d.%m.%
+#    ${date1}    Convert Date    ${date}    result_format=timestamp    exclude_millis=yes
+#    log to console    ${date1}
+#    ${currenDate} =    Get Current Date    result_format=result_format=%Y/%m/%d    increment=2 day
+#    ${currenDate2} =    Get Current Date    result_format=result_format=%Y/%m/%d    increment=1 day
+#    ${currenDate3} =    Get Current Date    result_format=result_format=%Y/%m/%d    increment=20 day
+#    ${date}    Convert Date    ${currenDate}    result_format=timestamp    exclude_millis=yes
+#    ${date2}    Convert Date    ${currenDate2}    result_format=timestamp    exclude_millis=yes
+#    ${date3}    Convert Date    ${currenDate3}    result_format=timestamp    exclude_millis=yes
+#    @{DateList} =    Create List    ${date}    ${date2}    ${date3}    2005-10-13 00:00:00.000
+#    log to console    ${tempList}
+#    Sort List    ${tempList}
+#    log to console    ${tempList}
+#    log to console    ${currenDate}
+#    log to console    ${currenDate2}
+#    log to console    ${currenDate3}
+#    log to console    ${date}
+
+
 *** Keywords ***
+Covnert To DataList    [Arguments]    @{originalList}
+        @{tempList} =    Create List
+        FOR    ${i}    IN    @{originalList}
+            @{date} =     split string    ${i}    /
+            ${day} =    set variable    ${date}[0]
+            ${month} =    set variable    ${date}[1]
+            ${year} =    set variable    ${date}[2]
+            ${tempDate} =    set variable    ${year}-${month}-${day}
+            Append To List    ${tempList}    ${tempDate}
+        END
+#        Sort List    ${tempList}
+        @{tempList2} =    Create List
+        FOR    ${i}    IN    @{tempList}
+            @{date} =     split string    ${i}    -
+            ${day} =    set variable    ${date}[2]
+            ${month} =    set variable    ${date}[1]
+            ${year} =    set variable    ${date}[0]
+            ${tempDate} =    set variable    ${day}/${month}/${year}
+            Append To List    ${tempList2}    ${tempDate}
+        END
+#        log to console    After tempList    converting formate..................................................
+#        Read List Values     @{tempList2}
+#        log to console    After originalList formate..................................................
+#        Read List Values     @{originalList}
+        [Return]    @{tempList2}
+#        lists should be equal    ${originalList}    ${tempList2}
 Append litvalue    [Arguments]    @{list}
     FOR    ${i}    IN RANGE    1-10
         log to console    ${i}
@@ -186,6 +293,18 @@ Sort Name By Desending
 Hide Rating Field
         ${disValue} =    Get Element Attribute    ${RatingTableTitle}    display
 
+Sort list integer    [Arguments]    @{list_Int}
+#    @{list_Int} =    Create List    1    2    20    5    3    7    2
+    ${len} =    get length   ${list_Int}
+#    log to console    ${len}
+    FOR    ${i}    IN RANGE   ${len}
+        @{list_Int} =    SecondLoop    ${i}    @{list_Int}
+    END
+
+#    FOR    ${i}    IN   @{list_Int}
+#        log to console    listvalue: ${i}
+#    END
+    [Return]    @{list_Int}
 SecondLoop    [Arguments]    ${i}    @{listInt}
     ${jlen} =    get length    ${listInt}
     ${l} =    evaluate    ${i} + 1

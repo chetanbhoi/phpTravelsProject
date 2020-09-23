@@ -46,6 +46,8 @@ Sort Table Field And Verify Sorting    [Arguments]    ${testData}
         ${TableHeaderTitle} =    replace string    ${TableHeaderTitle}    %s%      ${fildName}
         ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
         Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
         @{tempList} =    Create List
         @{originalList} =    Create List
         FOR    ${i}    IN RANGE    10
@@ -54,26 +56,42 @@ Sort Table Field And Verify Sorting    [Arguments]    ${testData}
             run keyword if    ${flag}==False   Click Element      ${NextPageButton}
             ...    ELSE    exit for loop
         END
-        @{tempList} =    copy list    ${originalList}
 
-        @{tempList} =    run keyword if    '${fildName}'=='progress'    sort integer list    ${tempList}
-        ...    ELSE IF    '${fildName}'=='rating'    sort integer list    ${tempList}
-        ...    ELSE    Sort Strings Value    ${tempList}
+        @{tempList} =    copy list    ${originalList}
+        Sort List    ${tempList}
+        run keyword if    '${sortType}'=='desc'    Reverse List    ${tempList}
 
         ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
 
-#        log to console    Started original......................................................
-#        Read List Values    @{originalList}
-#        log to console    Started Templ......................................................
-#        Read List Values    @{tempList}
+        lists should be equal    ${originalList}    ${tempList}
+        should be equal   ${sortValue}  ${sortType}
 
-        lists should be equal    ${tempList}    ${originalList}
-        should be equal   ${sortValue}  asc
+Sort Number Table Field And Verify Sorting    [Arguments]    ${testData}
+        ${fildName} =    set variable    ${testData["sort"]["fieldName"]}
+        ${sortType} =    set variable    ${testData["sort"]["sortType"]}
+        ${TableHeaderTitle} =    replace string    ${TableHeaderTitle}    %s%      ${fildName}
+        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+        @{tempList} =    Create List
+        @{originalList} =    Create List
+        FOR    ${i}    IN RANGE    10
+            @{originalList} =    Append Value To List     ${fildName}    @{originalList}
+            ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
+            run keyword if    ${flag}==False   Click Element      ${NextPageButton}
+            ...    ELSE    exit for loop
+        END
 
-Sort Strings Value    [Arguments]    @{List}
-        sort list    ${List}
-        ${List} =    convert to list    @{List}
-        [Return]        @{List}
+        @{tempList} =    Run Keyword If    '${fildName}'=='dob'    Sort Date Values    @{originalList}
+        ...    ELSE    Sort Integer List1    @{originalList}
+
+        run keyword if    '${sortType}'=='desc'    Reverse List    ${tempList}
+
+        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+
+        lists should be equal    ${originalList}    ${tempList}
+        should be equal   ${sortValue}  ${sortType}
 
 Append Value To List    [Arguments]     ${filed}    @{list}
         ${TableColumnList} =    replace string    ${TableColumnList}    %s%      ${filed}
@@ -92,15 +110,14 @@ Read List Values    [Arguments]    @{ListValues}
             log to console    Listvalue is: ${j}
         END
 
-Sort Integer List    [Arguments]    @{list_Int}
+Sort Integer List1    [Arguments]    @{list_Int}
     ${len} =    get length   ${list_Int}
     FOR    ${i}    IN RANGE   ${len}
-        @{list_Int} =    SecondLoop    ${i}    @{list_Int}
+        @{list_Int} =    Second Loop For Sort    ${i}    @{list_Int}
     END
-    ${list_Int} =    convert to list    @{list_Int}
     [Return]    @{list_Int}
 
-SecondLoop    [Arguments]    ${i}    @{listInt}
+Second Loop For Sort    [Arguments]    ${i}    @{listInt}
     ${jlen} =    get length    ${listInt}
     ${l} =    evaluate    ${i} + 1
     FOR    ${j}    IN RANGE    ${l}    ${jlen}
@@ -111,3 +128,41 @@ SecondLoop    [Arguments]    ${i}    @{listInt}
         run keyword if    ${iValue} > ${jValue}    Set List Value    ${listInt}    ${j}    ${temp}
     END
     [Return]    @{listInt}
+
+Sort Date Values   [Arguments]    @{originalList}
+        @{tempList} =    Create List
+        FOR    ${i}    IN    @{originalList}
+            @{date} =     split string    ${i}    /
+            ${day} =    set variable    ${date}[0]
+            ${month} =    set variable    ${date}[1]
+            ${year} =    set variable    ${date}[2]
+            ${tempDate} =    set variable    ${year}-${month}-${day}
+            Append To List    ${tempList}    ${tempDate}
+        END
+        Sort List    ${tempList}
+        @{tempList2} =    Create List
+        FOR    ${i}    IN    @{tempList}
+            @{date} =     split string    ${i}    -
+            ${day} =    set variable    ${date}[2]
+            ${month} =    set variable    ${date}[1]
+            ${year} =    set variable    ${date}[0]
+            ${tempDate} =    set variable    ${day}/${month}/${year}
+            Append To List    ${tempList2}    ${tempDate}
+        END
+        [Return]    @{tempList2}
+
+Hide Rating Field And Verify
+        ${flag} =    run keyword and return status    element should be visible    ${ShowRatingColumnButton}
+        run keyword if    ${flag}==True    click element    ${RatingColumnButton}
+        ${disValue} =    Get Element Attribute    ${RatingColumnHeaderField}    style
+
+        element should not be visible    ${ShowRatingColumnButton}
+        should contain    ${disValue}    display: none
+
+Show Rating Field And Verify
+        ${flag} =    run keyword and return status    element should be visible    ${ShowRatingColumnButton}
+        run keyword if    ${flag}==False    click element    ${RatingColumnButton}
+        ${disValue} =    Get Element Attribute    ${RatingColumnHeaderField}    style
+
+        element should be visible    ${ShowRatingColumnButton}
+        should not contain    ${disValue}    display: none
