@@ -5,6 +5,7 @@ Library    os
 Library    Collections
 Library    String
 Library    DateTime
+Library    ../Common/common_functions.py
 Resource    ../Common/tabulator_variables.txt
 
 
@@ -151,18 +152,4 @@ Sort Date Values   [Arguments]    @{originalList}
         END
         [Return]    @{tempList2}
 
-Hide Rating Field And Verify
-        ${flag} =    run keyword and return status    element should be visible    ${ShowRatingColumnButton}
-        run keyword if    ${flag}==True    click element    ${RatingColumnButton}
-        ${disValue} =    Get Element Attribute    ${RatingColumnHeaderField}    style
 
-        element should not be visible    ${ShowRatingColumnButton}
-        should contain    ${disValue}    display: none
-
-Show Rating Field And Verify
-        ${flag} =    run keyword and return status    element should be visible    ${ShowRatingColumnButton}
-        run keyword if    ${flag}==False    click element    ${RatingColumnButton}
-        ${disValue} =    Get Element Attribute    ${RatingColumnHeaderField}    style
-
-        element should be visible    ${ShowRatingColumnButton}
-        should not contain    ${disValue}    display: none

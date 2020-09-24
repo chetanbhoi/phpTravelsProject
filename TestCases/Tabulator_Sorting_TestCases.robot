@@ -63,8 +63,18 @@ Sort Table By Driver In Descending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_driver_field_as_desc}
     Sort Table Field And Verify Sorting    ${searchData}
 
-Verify Hide Rating Column
-    Hide Rating Field And Verify
+Hide Rating Field And Verify
+        ${flag} =    run keyword and return status    element should be visible    ${ShowRatingColumnButton}
+        run keyword if    ${flag}==True    click element    ${RatingColumnButton}
+        ${disValue} =    Get Element Attribute    ${RatingColumnHeaderField}    style
 
-Verify Show Rating Column
-    Show Rating Field And Verify
+        element should not be visible    ${ShowRatingColumnButton}
+        should contain    ${disValue}    display: none
+
+Show Rating Field And Verify
+        ${flag} =    run keyword and return status    element should be visible    ${ShowRatingColumnButton}
+        run keyword if    ${flag}==False    click element    ${RatingColumnButton}
+        ${disValue} =    Get Element Attribute    ${RatingColumnHeaderField}    style
+
+        element should be visible    ${ShowRatingColumnButton}
+        should not contain    ${disValue}    display: none
