@@ -5,9 +5,10 @@ Library    String
 Resource    ../Common/tabulator_keywords.robot
 Resource  ../Common/tabulator_resources.txt
 Resource    ../Common/php_travels_flights_variables.txt
+Library    ../Common/common_functions.py
 Variables    ../variable_files/ConfigData.py
-Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
-Suite Teardown    Close Tabulator Browser
+#Suite Setup    Open Browser and Maximize    ${BASEURL}  ${BROWSER}  ${BROWSERPATH}
+#Suite Teardown    Close Tabulator Browser
 
 *** Variables ***
 ${URL}                      about:none
@@ -22,6 +23,9 @@ ${FlightListData} =  css:ul#LIST > li
 ${FlightListCity} =  css:first-of-type p.theme-search-results-item-flight-section-meta-city
 
 *** Test Cases ***
+Test Python Call
+    Call Method From Python
+
 #Sorting Interget List
 #        ${fildName} =    set variable    progress
 #        ${sortType} =    set variable    desc
@@ -115,25 +119,25 @@ ${FlightListCity} =  css:first-of-type p.theme-search-results-item-flight-sectio
 #TestLoop2
 #    go to    http://www.yahoo.co
 #    log to console    Start Browser
-
-Convert date into timestemp
-        ${fildName} =    set variable    dob
-        ${sortType} =    set variable    desc
-        ${TableHeaderTitle} =    replace string    ${TableHeaderTitle}    %s%      ${fildName}
-        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
-        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
-        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
-        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
-        @{tempList} =    Create List
-        @{originalList} =    Create List
-        FOR    ${i}    IN RANGE    10
-            @{originalList} =    Append Value To List     ${fildName}    @{originalList}
-            ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
-            run keyword if    ${flag}==False   Click Element      ${NextPageButton}
-            ...    ELSE    exit for loop
-        END
-        @{tempList} =     Covnert To DataList     @{originalList}
-         lists should be equal    ${originalList}    ${tempList}
+#
+#Convert date into timestemp
+#        ${fildName} =    set variable    dob
+#        ${sortType} =    set variable    desc
+#        ${TableHeaderTitle} =    replace string    ${TableHeaderTitle}    %s%      ${fildName}
+#        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+#        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+#        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
+#        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
+#        @{tempList} =    Create List
+#        @{originalList} =    Create List
+#        FOR    ${i}    IN RANGE    10
+#            @{originalList} =    Append Value To List     ${fildName}    @{originalList}
+#            ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
+#            run keyword if    ${flag}==False   Click Element      ${NextPageButton}
+#            ...    ELSE    exit for loop
+#        END
+#        @{tempList} =     Covnert To DataList     @{originalList}
+#         lists should be equal    ${originalList}    ${tempList}
 
 #Covnert To DataList    [Arguments]    @{originalList}
 #        @{tempList} =    Create List
@@ -181,6 +185,19 @@ Convert date into timestemp
 
 
 *** Keywords ***
+Call Method From Python
+    @{list} =    Create List    12/03/1900    23/02/1601    01/02/2020
+    log to console    ${list}
+
+    @{ts} =    Get Sorted Dates   ${list}
+    log to console    ${ts}
+
+    @{list1} =    Create List     12    3    19    23    16    1    2    20
+    log to console    ${list1}
+
+    @{ts1} =    Get Sorted Number   ${list1}
+    log to console    ${ts1}
+
 Covnert To DataList    [Arguments]    @{originalList}
         @{tempList} =    Create List
         FOR    ${i}    IN    @{originalList}
