@@ -13,7 +13,7 @@ Sort Table By Name In Ascending Order And Verify
 
 Sort Table By Progress In Ascending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_progress_field}
-    Sort Number Table Field And Verify Sorting    ${searchData}
+    Sort Table Field And Verify Sorting    ${searchData}
 
 Sort Table By Gender In Ascending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_gender_field}
@@ -21,7 +21,7 @@ Sort Table By Gender In Ascending Order And Verify
 
 Sort Table By Rating In Ascending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_rating_field}
-    Sort Number Table Field And Verify Sorting    ${searchData}
+    Sort Table Field And Verify Sorting    ${searchData}
 
 Sort Table By Color In Ascending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_color_field}
@@ -29,7 +29,7 @@ Sort Table By Color In Ascending Order And Verify
 
 Sort Table By DOB In Ascending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_dob_field}
-    Sort Number Table Field And Verify Sorting    ${searchData}
+    Sort Table Field And Verify Sorting    ${searchData}
 
 Sort Table By Driver In Ascending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_driver_field}
@@ -41,7 +41,7 @@ Sort Table By Name In Descending Order And Verify
 
 Sort Table By Progress In Descending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_progress_field_as_desc}
-    Sort Number Table Field And Verify Sorting    ${searchData}
+    Sort Table Field And Verify Sorting    ${searchData}
 
 Sort Table By Gender In Descending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_gender_field_as_desc}
@@ -49,7 +49,7 @@ Sort Table By Gender In Descending Order And Verify
 
 Sort Table By Rating In Descending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_rating_field_as_desc}
-    Sort Number Table Field And Verify Sorting    ${searchData}
+    Sort Table Field And Verify Sorting    ${searchData}
 
 Sort Table By Color In Descending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_color_field_as_desc}
@@ -57,7 +57,7 @@ Sort Table By Color In Descending Order And Verify
 
 Sort Table By DOB In Descending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_dob_field_as_desc}
-    Sort Number Table Field And Verify Sorting    ${searchData}
+    Sort Table Field And Verify Sorting    ${searchData}
 
 Sort Table By Driver In Descending Order And Verify
     ${searchData} =    Set Variable    ${sort_table_by_driver_field_as_desc}

@@ -23,8 +23,6 @@ ${FlightListData} =  css:ul#LIST > li
 ${FlightListCity} =  css:first-of-type p.theme-search-results-item-flight-section-meta-city
 
 *** Test Cases ***
-Test Python Call
-    Call Method From Python
 
 #Sorting Interget List
 #        ${fildName} =    set variable    progress
@@ -184,19 +182,61 @@ Test Python Call
 #    log to console    ${date}
 
 
-*** Keywords ***
-Call Method From Python
-    @{list} =    Create List    12/03/1900    23/02/1601    01/02/2020
+Test Python Call
+    @{list} =    Create List    12/03/1500    23/02/1601    01/02/2020
+#    @{list} =    Create List    12    1    3    390    3    2    700
+#    @{list} =    Create List    chetan    zxmm    naresh    dives    bhumi    rajal    ashok
+
     log to console    ${list}
+    @{temp} =    Sort List Values    date    @{List}
+    log to console    ${temp}
 
-    @{ts} =    Get Sorted Dates   ${list}
-    log to console    ${ts}
+  454  lists should be equal     ${list}    ${temp}
 
-    @{list1} =    Create List     12    3    19    23    16    1    2    20
-    log to console    ${list1}
+*** Keywords ***
+Sort List Values    [Arguments]    ${valueType}    @{List}
+    @{tempList} =    Copy List  ${List}
+    @{tempList} =    run keyword if    '${valueType}'=='number'    get_sorted_number    ${List}
+    ...    ELSE IF    '${valueType}'=='date'    get_sorted_dates    ${List}
+    ...    ELSE IF    '${valueType}'=='string'    get_sorted_string   ${tempList}
 
-    @{ts1} =    Get Sorted Number   ${list1}
-    log to console    ${ts1}
+    [Return]    @{tempList}
+
+#
+#Sort Date Values   [Arguments]    @{originalList}
+#        @{tempList} =    Create List
+#        FOR    ${i}    IN    @{originalList}
+#            @{date} =     split string    ${i}    /
+#            ${day} =    set variable    ${date}[0]
+#            ${month} =    set variable    ${date}[1]
+#            ${year} =    set variable    ${date}[2]
+#            ${tempDate} =    set variable    ${year}-${month}-${day}
+#            Append To List    ${tempList}    ${tempDate}
+#        END
+#        Sort List    ${tempList}
+#        @{tempList2} =    Create List
+#        FOR    ${i}    IN    @{tempList}
+#            @{date} =     split string    ${i}    -
+#            ${day} =    set variable    ${date}[2]
+#            ${month} =    set variable    ${date}[1]
+#            ${year} =    set variable    ${date}[0]
+#            ${tempDate} =    set variable    ${day}/${month}/${year}
+#            Append To List    ${tempList2}    ${tempDate}
+#        END
+#        [Return]    @{tempList2}
+
+#    @{list} =    Create List    12/03/1900    23/02/1601    01/02/2020
+#    log to console    ${list}
+#
+#    @{ts} =    Get Sorted Dates   ${list}
+#    log to console    ${ts}
+#
+#    @{list} =    Create List    12    1    3    390    3    2    700
+#    @{list} =    convert to list    ${list}
+#    log to console    ${list}
+#
+#    @{ts1} =    Get Sorted Number   ${list}
+#    log to console    ${ts1}
 
 Covnert To DataList    [Arguments]    @{originalList}
         @{tempList} =    Create List

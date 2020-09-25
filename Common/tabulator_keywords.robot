@@ -58,34 +58,11 @@ Sort Table Field And Verify Sorting    [Arguments]    ${testData}
             ...    ELSE    exit for loop
         END
 
-        @{tempList} =    copy list    ${originalList}
-        Sort List    ${tempList}
-        run keyword if    '${sortType}'=='desc'    Reverse List    ${tempList}
-
-        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
-
-        lists should be equal    ${originalList}    ${tempList}
-        should be equal   ${sortValue}  ${sortType}
-
-Sort Number Table Field And Verify Sorting    [Arguments]    ${testData}
-        ${fildName} =    set variable    ${testData["sort"]["fieldName"]}
-        ${sortType} =    set variable    ${testData["sort"]["sortType"]}
-        ${TableHeaderTitle} =    replace string    ${TableHeaderTitle}    %s%      ${fildName}
-        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
-        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
-        ${sortValue} =    Get Element Attribute    ${TableHeaderTitle}    aria-sort
-        Run Keyword If    '${sortValue}'!='${sortType}'    Click Element    ${TableHeaderTitle}
-        @{tempList} =    Create List
-        @{originalList} =    Create List
-        FOR    ${i}    IN RANGE    10
-            @{originalList} =    Append Value To List     ${fildName}    @{originalList}
-            ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
-            run keyword if    ${flag}==False   Click Element      ${NextPageButton}
-            ...    ELSE    exit for loop
-        END
-
-        @{tempList} =    Run Keyword If    '${fildName}'=='dob'    Sort Date Values    @{originalList}
-        ...    ELSE    Sort Integer List1    @{originalList}
+        @{tempList} =    Copy List  ${originalList}
+        @{tempList} =    run keyword if    '${fildName}'=='progress'    Get Sorted Number    ${tempList}
+        ...    ELSE IF    '${fildName}'=='rating'    Get Sorted Number    ${tempList}
+        ...    ELSE IF    '${fildName}'=='dob'    Get Sorted Dates    ${tempList}
+        ...    ELSE    Get Sorted String Values    @{tempList}
 
         run keyword if    '${sortType}'=='desc'    Reverse List    ${tempList}
 
@@ -93,6 +70,11 @@ Sort Number Table Field And Verify Sorting    [Arguments]    ${testData}
 
         lists should be equal    ${originalList}    ${tempList}
         should be equal   ${sortValue}  ${sortType}
+
+Get Sorted String Values    [Arguments]    @{List}
+    Sort List    ${List}
+    [Return]    @{List}
+
 
 Append Value To List    [Arguments]     ${filed}    @{list}
         ${TableColumnList} =    replace string    ${TableColumnList}    %s%      ${filed}
@@ -111,45 +93,5 @@ Read List Values    [Arguments]    @{ListValues}
             log to console    Listvalue is: ${j}
         END
 
-Sort Integer List1    [Arguments]    @{list_Int}
-    ${len} =    get length   ${list_Int}
-    FOR    ${i}    IN RANGE   ${len}
-        @{list_Int} =    Second Loop For Sort    ${i}    @{list_Int}
-    END
-    [Return]    @{list_Int}
-
-Second Loop For Sort    [Arguments]    ${i}    @{listInt}
-    ${jlen} =    get length    ${listInt}
-    ${l} =    evaluate    ${i} + 1
-    FOR    ${j}    IN RANGE    ${l}    ${jlen}
-        ${iValue} =    set variable     ${listInt[${i}]}
-        ${jValue} =    set variable    ${listInt[${j}]}
-        ${temp} =    run keyword if    ${iValue} > ${jValue}    set variable    ${iValue}
-        run keyword if    ${iValue} > ${jValue}    Set List Value    ${listInt}    ${i}    ${jValue}
-        run keyword if    ${iValue} > ${jValue}    Set List Value    ${listInt}    ${j}    ${temp}
-    END
-    [Return]    @{listInt}
-
-Sort Date Values   [Arguments]    @{originalList}
-        @{tempList} =    Create List
-        FOR    ${i}    IN    @{originalList}
-            @{date} =     split string    ${i}    /
-            ${day} =    set variable    ${date}[0]
-            ${month} =    set variable    ${date}[1]
-            ${year} =    set variable    ${date}[2]
-            ${tempDate} =    set variable    ${year}-${month}-${day}
-            Append To List    ${tempList}    ${tempDate}
-        END
-        Sort List    ${tempList}
-        @{tempList2} =    Create List
-        FOR    ${i}    IN    @{tempList}
-            @{date} =     split string    ${i}    -
-            ${day} =    set variable    ${date}[2]
-            ${month} =    set variable    ${date}[1]
-            ${year} =    set variable    ${date}[0]
-            ${tempDate} =    set variable    ${day}/${month}/${year}
-            Append To List    ${tempList2}    ${tempDate}
-        END
-        [Return]    @{tempList2}
-
-
+Download CSV And Verify Data
+        Click Element    css:button[name='download']
