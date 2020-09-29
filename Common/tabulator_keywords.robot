@@ -5,6 +5,7 @@ Library    os
 Library    Collections
 Library    String
 Library    DateTime
+Library    OperatingSystem
 Library    ../Common/common_functions.py
 Resource    ../Common/tabulator_variables.txt
 
@@ -92,6 +93,87 @@ Read List Values    [Arguments]    @{ListValues}
         FOR    ${j}    IN    @{ListValues}
             log to console    Listvalue is: ${j}
         END
+
+Read Table Records
+        @{originalList} =    Create List
+        FOR    ${i}    IN RANGE    10
+            @{originalList} =    Append Table Rows To List     ${i}    @{originalList}
+            ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
+            run keyword if    ${flag}==False   Click Element      ${NextPageButton}
+            ...    ELSE    exit for loop
+        END
+        [Return]    @{originalList}
+
+Append Table Rows To List    [Arguments]     ${i}    @{list}
+        ${rowCount} =    Get Element Count    ${PagingRowList}
+        @{tempList} =    Create List
+        @{tempList} =    run keyword if    ${i}==0    Get Header List    @{tempList}
+        run keyword if    ${i}==0    Append To List    ${list}    ${tempList}
+        FOR    ${rowNumber}    IN RANGE    1    ${rowCount}
+            @{tempList} =    Get Row List    ${rowNumber}    @{tempList}
+            Append To List    ${list}    ${tempList}
+        END
+        [Return]    @{list}
+
+
+Get Header List    [Arguments]    @{headList}
+    @{headerList} =    Get WebElements    ${HeaderTitleList}
+    FOR    ${element}    IN    @{headerList}
+        ${value} =    get text    ${element}
+        run keyword if    '${value}'!=''     Append To List    ${headList}    ${value}
+    END
+    [Return]    @{headList}
+
+Get Row List    [Arguments]    ${i}    @{subList}
+        ${i} =    Convert To String    ${i}
+        @{subList} =    create list
+        ${cellNumber} =    Set Variable    1
+        ${rowElement1} =    Replace String    ${RowCellValues}    %row%    ${i}
+
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        ${name} =    Get Text    ${rowElement}
+        Append To List    ${subList}    ${name}
+
+        ${cellNumber} =    Evaluate   ${cellNumber}+1
+        ${cellNumber} =    Convert To String    ${cellNumber}
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        ${task} =    Get Element Attribute    ${rowElement}    aria-label
+        Append To List    ${subList}    ${task}
+
+        ${cellNumber} =    Evaluate   ${cellNumber}+1
+        ${cellNumber} =    Convert To String    ${cellNumber}
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        ${gender} =    Get Text    ${rowElement}
+        Append To List    ${subList}    ${gender}
+
+        ${cellNumber} =    Evaluate   ${cellNumber}+1
+        ${cellNumber} =    Convert To String    ${cellNumber}
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        ${ratAttri} =    Get Element Attribute    ${rowElement}    style
+        ${flg} =    run keyword and return status    should not contain    ${ratAttri}    display
+        ${rating} =    Get Element Attribute    ${rowElement}    aria-label
+        run keyword if    '${flg}'=='True'     Append To List    ${subList}    ${rating}
+
+        ${cellNumber} =    Evaluate   ${cellNumber}+1
+        ${cellNumber} =    Convert To String    ${cellNumber}
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        ${color} =    Get Text    ${rowElement}
+        Append To List    ${subList}    ${color}
+
+        ${cellNumber} =    Evaluate   ${cellNumber}+1
+        ${cellNumber} =    Convert To String    ${cellNumber}
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        ${dob} =    Get Text    ${rowElement}
+        Append To List    ${subList}    ${dob}
+
+        ${cellNumber} =    Evaluate   ${cellNumber}+1
+        ${cellNumber} =    Convert To String    ${cellNumber}
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        ${driver} =    Get Element Attribute    ${rowElement}    aria-checked
+        Append To List    ${subList}    ${driver}
+
+        [Return]    @{subList}
+
 
 Download CSV And Verify Data
         Click Element    css:button[name='download']
