@@ -2,6 +2,8 @@
 Library    SeleniumLibrary
 Library    DateTime
 Library    String
+Library    OperatingSystem
+#Library    DataDriver    C:/Users/112537/Downloads/Tabulator Example Download.csv
 Resource    ../Common/tabulator_keywords.robot
 Resource  ../Common/tabulator_resources.txt
 Resource    ../Common/php_travels_flights_variables.txt
@@ -181,19 +183,114 @@ ${FlightListCity} =  css:first-of-type p.theme-search-results-item-flight-sectio
 #    log to console    ${currenDate3}
 #    log to console    ${date}
 
+#
+#Test Python Call
+#    @{list} =    Create List    12/03/1500    23/02/1601    01/02/2020
+##    @{list} =    Create List    12    1    3    390    3    2    700
+##    @{list} =    Create List    chetan    zxmm    naresh    dives    bhumi    rajal    ashok
+#
+#    log to console    ${list}
+#    @{temp} =    Sort List Values    date    @{List}
+#    log to console    ${temp}
+#
+#    lists should be equal     ${list}    ${temp}
 
-Test Python Call
-    @{list} =    Create List    12/03/1500    23/02/1601    01/02/2020
-#    @{list} =    Create List    12    1    3    390    3    2    700
-#    @{list} =    Create List    chetan    zxmm    naresh    dives    bhumi    rajal    ashok
+#Read file test
+#
+#    @{originalList} =    Create List
+#    FOR    ${i}    IN RANGE    10
+#        @{originalList} =    Append Value To List123     @{originalList}
+#        ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
+#        run keyword if    ${flag}==False   Click Element      ${NextPageButton}
+#        ...    ELSE    exit for loop
+#    END
+#    log to console     ${originalList}
 
-    log to console    ${list}
-    @{temp} =    Sort List Values    date    @{List}
-    log to console    ${temp}
+#
+#Download CSV Without Rating Field And Verify
+#
+#Download CSV With Search Critearea And Verify
+#
+#Read Data Tables
+#    ${filename} =   set variable    C:/Users/112537/Downloads/Tabulator Example Download.csv
+#    @{list} =    Get Csv Data In List    ${filename}
+#    log to console    printed file data.:----${list}
+#
+#    @{originalList} =    Create List
+#    FOR    ${i}    IN RANGE    10
+#        @{originalList} =    Append Table Values     ${i}    @{originalList}
+#        ${flag} =    run keyword and return status    element should be disabled    ${NextPageButton}
+#        run keyword if    ${flag}==False   Click Element      ${NextPageButton}
+#        ...    ELSE    exit for loop
+#    END
+#    log to console     Original list:----${originalList}
+#    lists should be equal     ${originalList}    ${list}
 
-  454  lists should be equal     ${list}    ${temp}
+Test evaluate
+        ${i} =    set variable    1
+        ${cellNumber} =    Set Variable    1
+        ${rowElement1} =    Replace String    ${RowCellValues}    %row%    ${i}
+        log to console    rowElement1:${rowElement1}
 
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        log to console    rowElement:${rowElement}
+
+          ${cellNumber} =    Evaluate   ${cellNumber}+1
+        log to console    cellnumber: ${cellNumber}
+        ${cellNumber} =    Convert To String    ${cellNumber}
+
+        ${rowElement} =    Replace String    ${rowElement1}    %cell%    ${cellNumber}
+        log to console    rowElement:${rowElement}
 *** Keywords ***
+Append Table Values    [Arguments]     ${i}    @{list}
+        ${rowCount} =    Get Element Count    xpath://div[@id='tabulator-example']//div[@role='row'] | //div[@class='tabulator-headers']
+        @{tempList} =    Create List
+        @{tempList} =    run keyword if    ${i}==0    Get Header List    @{tempList}
+        run keyword if    ${i}==0    Append To List    ${list}    ${tempList}
+        FOR    ${rowNumber}    IN RANGE    1    ${rowCount}
+            @{tempList} =    Get Row List    ${rowNumber}    @{tempList}
+            Append To List    ${list}    ${tempList}
+        END
+        [Return]    @{list}
+
+
+Get Header List    [Arguments]    @{headList}
+    @{headerList} =    Get WebElements    xpath://div[@id='tabulator-example']//div[@role='columnheader']//div[@class='tabulator-col-title']
+    FOR    ${element}    IN    @{headerList}
+        ${value} =    get text    ${element}
+        run keyword if    '${value}'!=''     Append To List    ${headList}    ${value}
+    END
+    [Return]    @{headList}
+
+Get Row List    [Arguments]    ${i}    @{subList}
+        @{subList} =    create list
+        ${name} =    Get Text    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[1]
+        Append To List    ${subList}    ${name}
+        ${task} =    Get Element Attribute    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[2]    aria-label
+        Append To List    ${subList}    ${task}
+        ${gender} =    Get Text    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[3]
+        Append To List    ${subList}    ${gender}
+
+        ${ratAttri} =    Get Element Attribute    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[4]    style
+        ${flg} =    run keyword and return status    should not contain    ${ratAttri}    display
+
+        ${rating} =    Get Element Attribute    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[4]    aria-label
+        run keyword if    '${flg}'=='True'     Append To List    ${subList}    ${rating}
+
+        ${color} =    Get Text    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[5]
+        Append To List    ${subList}    ${color}
+        ${dob} =    Get Text    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[6]
+        Append To List    ${subList}    ${dob}
+        ${driver} =    Get Element Attribute    xpath:((//div[@id='tabulator-example']//div[@role='row'])[${i}]//div[@role='gridcell'])[7]    aria-checked
+        Append To List    ${subList}    ${driver}
+
+        [Return]    @{subList}
+
+Read CSV File
+    ${fileName} =    set variable    C:/Users/112537/Downloads/Tabulator Example Download.csv
+    Get File  ${fileName}
+
+
 Sort List Values    [Arguments]    ${valueType}    @{List}
     @{tempList} =    Copy List  ${List}
     @{tempList} =    run keyword if    '${valueType}'=='number'    get_sorted_number    ${List}
